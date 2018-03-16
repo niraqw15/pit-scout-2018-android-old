@@ -21,7 +21,7 @@
         <ListView
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
-            android:id="@+id/teamsList"
+            android:id="@+id/timesList"
             android:layout_below="@+id/searchEditText"
             android:layout_centerHorizontal="true"
             android:textSize="30sp"/>
