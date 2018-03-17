@@ -61,11 +61,21 @@
         android:text="00:00:00"
         android:layout_below="@id/buttonLayout"/>
 
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/startButton"
+        android:textOn="Stop"
+        android:textOff="Start"
+        android:layout_below="@id/clockView"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="@string/padding"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_below="@+id/clockView"
+        android:layout_below="@+id/startButton"
         android:id="@+id/titleLayout"
         android:paddingTop="@string/padding">
 
