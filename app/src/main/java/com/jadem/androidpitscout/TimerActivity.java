@@ -7,6 +7,9 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 /**
  * Created by niraq on 3/15/2018.
  */
@@ -15,11 +18,16 @@ public class TimerActivity extends AppCompatActivity {
 
     private boolean isRamp;
     private Switch timerTypeSwitch;
+    private FirebaseDatabase database;
+    private DatabaseReference myRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer);
+
+        database = FirebaseDatabase.getInstance();
+        myRef = database.getReference().child();
 
         timerTypeSwitch = (Switch) findViewById(R.id.timerSwitch);
         isRamp = timerTypeSwitch.isChecked();
