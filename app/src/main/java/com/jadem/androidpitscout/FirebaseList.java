@@ -3,7 +3,7 @@ package com.jadem.androidpitscout;
 /**
  * Created by jadem on 3/17/2018.
  */
-
+/*
 import android.util.Log;
 
 import com.google.firebase.database.ChildEventListener;
@@ -128,3 +128,4 @@ public class FirebaseList<T> {
         return values;
     }
 }
+*/
