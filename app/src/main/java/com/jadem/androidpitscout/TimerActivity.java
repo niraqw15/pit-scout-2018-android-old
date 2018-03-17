@@ -1,6 +1,7 @@
 package com.jadem.androidpitscout;
 
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
@@ -81,6 +82,7 @@ public class TimerActivity extends AppCompatActivity {
             toggleButton.setText("Start");
         } else {
             //Turns timer on.
+            timerView.setBase(SystemClock.elapsedRealtime()); //TODO: Check if this is in milliseconds, convert if not
             timerView.start();
             timerRunning = true;
             toggleButton.setText("Stop");
