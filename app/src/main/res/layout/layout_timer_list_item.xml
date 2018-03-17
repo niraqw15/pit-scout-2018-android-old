@@ -10,7 +10,7 @@
         android:layout_weight="1"
         android:layout_height="match_parent"
         android:id="@+id/trialView"
-        android:hint="Trail #"
+        android:hint="Trial"
         android:textAlignment="center"/>
 
     <TextView

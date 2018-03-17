@@ -71,7 +71,7 @@
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:id="@+id/trialTitle"
-            android:text="Trial #"
+            android:text="Trial"
             android:textAlignment="center"/>
 
         <TextView
@@ -97,6 +97,7 @@
         android:layout_height="match_parent"
         android:id="@+id/timesList"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/titleLayout" />
+        android:layout_below="@+id/titleLayout"
+        android:paddingTop="@string/padding" />
 
 </RelativeLayout>
