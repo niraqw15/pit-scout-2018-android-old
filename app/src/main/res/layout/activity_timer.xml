@@ -14,31 +14,34 @@
             android:layout_height="40dp"
             android:id="@+id/cancelButton"
             android:background="@drawable/ic_cancel"
-            android:layout_alignParentStart="true"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Ramp"
-            android:id="@+id/rampText"
-            android:layout_toLeftOf="@+id/timerSwitch"
-            android:layout_centerVertical="true"
-            android:paddingRight="@string/padding"/>
-
-        <Switch
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/timerSwitch"
-            android:layout_centerInParent="true"/>
+            android:layout_alignParentStart="true"
+            android:onClick="cancelTimer"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Drive"
             android:id="@+id/driveText"
+            android:layout_toLeftOf="@+id/timerSwitch"
+            android:layout_centerVertical="true"
+            android:paddingRight="@string/padding"/>
+
+        <Switch
+            android:id="@+id/timerSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/rampText"
+            android:layout_centerInParent="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ramp"
+            android:id="@+id/rampText"
             android:layout_toRightOf="@+id/timerSwitch"
             android:layout_centerVertical="true"
-            android:paddingLeft="@string/padding"/>
+            android:paddingLeft="@string/padding"
+            android:onClick="confirmTimer"/>
 
         <Button
             android:layout_width="40dp"
