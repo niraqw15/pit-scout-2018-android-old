@@ -3,7 +3,7 @@ package com.jadem.androidpitscout;
 /**
  * Created by jadem on 3/17/2018.
  */
-/*
+
 import android.util.Log;
 
 import com.google.firebase.database.ChildEventListener;
@@ -25,11 +25,7 @@ public class FirebaseList<T> {
 
     public void setupFirebaseListening(String url, final Class<T> firebaseClass, final FirebaseUpdatedCallback firebaseUpdatedCallback) {
         String childString = "";
-        if(url.contains("Matches")){
-            childString = "Matches";
-        } else if(url.contains("TeamInMatchDatas")){
-            childString = "TeamInMatchDatas";
-        } else if(url.contains("Teams")){
+        if(url.contains("Teams")){
             childString = "Teams";
         }
         DatabaseReference firebase = FirebaseDatabase.getInstance().getReference().getRef().child(childString);
@@ -128,4 +124,3 @@ public class FirebaseList<T> {
         return values;
     }
 }
-*/

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Android Pit Scout</string>
+    <string name="timer_hint"><font size="70dp">TIMER</font></string>
 </resources>

@@ -6,5 +6,12 @@ package com.jadem.androidpitscout.firebase_classes;
 
 public class Teams extends Object{
 
+    public String name;
+    public Integer number;
+    public Float pitDriveTime;
+    public Float pitRampTime;
+    public Boolean pitDriveTimeOutcome;
+    public Boolean pitRampTimeOutcome;
+    public String pitSEALsNotes;
 
 }
