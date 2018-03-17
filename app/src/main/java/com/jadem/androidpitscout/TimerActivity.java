@@ -41,8 +41,4 @@ public class TimerActivity extends AppCompatActivity {
         //TODO: Complete
     }
 
-    public void switchTimerType(View view) {
-        //TODO: Complete
-    }
-
 }
