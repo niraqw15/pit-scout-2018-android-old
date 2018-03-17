@@ -7,24 +7,26 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import java.io.File;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
     ListView listView;
     ArrayAdapter<String> adapter;
     EditText searchBar;
     Activity activity;
-
+    public static FirebaseDatabase dataBase;
+    public static DatabaseReference ref;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        dataBase = FirebaseDatabase.getInstance();
+        ref = dataBase.getReference();
 
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         listView = (ListView) findViewById(R.id.timesList);
@@ -41,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateListView() {
-
         final EditText searchBar = (EditText) findViewById(R.id.searchEditText);
 
     }
