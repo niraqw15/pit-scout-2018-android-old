@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
@@ -25,6 +26,7 @@ public class TimerActivity extends AppCompatActivity {
     private boolean isRamp, timerRunning;
     private int teamNumber;
     private Button toggleButton;
+    private Chronometer timerView;
     private Switch timerTypeSwitch;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
@@ -42,6 +44,7 @@ public class TimerActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference().child("Teams").child("" + teamNumber); //TODO: Receive team number before doing this!
 
+        timerView = (Chronometer) findViewById(R.id.timerView);
         toggleButton = (Button) findViewById(R.id.toggleTimerButton);
         timerTypeSwitch = (Switch) findViewById(R.id.timerSwitch);
         isRamp = timerTypeSwitch.isChecked();

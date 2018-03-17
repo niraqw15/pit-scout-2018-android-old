@@ -52,13 +52,12 @@
 
     </RelativeLayout>
 
-    <TextClock
+    <Chronometer
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/clockView"
+        android:id="@+id/timerView"
         android:layout_centerHorizontal="true"
         android:textSize="50sp"
-        android:text="00:00:00"
         android:layout_below="@id/buttonLayout"/>
 
     <Button
@@ -67,7 +66,7 @@
         android:id="@+id/toggleTimerButton"
         android:text="Start"
         android:textSize="25sp"
-        android:layout_below="@id/clockView"
+        android:layout_below="@id/timerView"
         android:layout_centerHorizontal="true"
         android:paddingTop="@string/padding"
         android:onClick="toggleTimer"/>
