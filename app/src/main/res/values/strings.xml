@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Android Pit Scout</string>
+    <string name="padding">10dp</string>
 </resources>
