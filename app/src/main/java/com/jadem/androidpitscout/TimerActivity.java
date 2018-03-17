@@ -24,6 +24,7 @@ public class TimerActivity extends AppCompatActivity {
 
     private boolean isRamp, timerRunning;
     private int teamNumber;
+    private Button toggleButton;
     private Switch timerTypeSwitch;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
@@ -39,8 +40,9 @@ public class TimerActivity extends AppCompatActivity {
         timerRunning = false;
 
         database = FirebaseDatabase.getInstance();
-        myRef = database.getReference().child("Teams").child("" + teamNumber); //TODO: Recieve team number before doing this!
+        myRef = database.getReference().child("Teams").child("" + teamNumber); //TODO: Receive team number before doing this!
 
+        toggleButton = (Button) findViewById(R.id.toggleTimerButton);
         timerTypeSwitch = (Switch) findViewById(R.id.timerSwitch);
         isRamp = timerTypeSwitch.isChecked();
         timerTypeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -54,7 +56,7 @@ public class TimerActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(!dataSnapshot.child("Messages").getValue().equals(null)) {
-
+                    //TODO: Complete this
                 }
             }
 
@@ -69,7 +71,14 @@ public class TimerActivity extends AppCompatActivity {
     }
 
     public void toggleTimer(View view) {
-        //TODO: Complete
+        if(timerRunning) {
+            //Turns timer off.
+            toggleButton.setText("Start");
+        } else {
+            //Turns timer on.
+            toggleButton.setText("Stop");
+        }
+        timerRunning = !timerRunning;
     }
 
     public void confirmTimer(View view) {

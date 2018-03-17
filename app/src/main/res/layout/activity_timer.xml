@@ -64,7 +64,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/startButton"
+        android:id="@+id/toggleTimerButton"
         android:text="Start"
         android:textSize="25sp"
         android:layout_below="@id/clockView"
@@ -76,7 +76,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_below="@+id/startButton"
+        android:layout_below="@+id/toggleTimerButton"
         android:id="@+id/titleLayout"
         android:paddingTop="@string/padding">
 
