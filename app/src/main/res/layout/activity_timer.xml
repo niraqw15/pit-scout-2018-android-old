@@ -67,30 +67,11 @@
 
     </LinearLayout>
 
-    <RelativeLayout
+    <ListView
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/listLayout"
+        android:layout_height="match_parent"
+        android:id="@+id/timesList"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/titleLayout"
-        android:paddingTop="@string/padding">
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Search"
-            android:id="@+id/searchEditText"
-            android:layout_centerHorizontal="true"
-            android:textSize="25sp"
-            android:layout_alignParentBottom="true"/>
-
-        <ListView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/timesList"
-            android:layout_centerHorizontal="true"
-            android:layout_above="@+id/searchEditText" />
-
-    </RelativeLayout>
+        android:layout_below="@+id/titleLayout" />
 
 </RelativeLayout>
