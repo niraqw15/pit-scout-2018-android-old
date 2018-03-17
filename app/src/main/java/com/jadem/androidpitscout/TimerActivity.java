@@ -26,7 +26,7 @@ public class TimerActivity extends AppCompatActivity {
     private boolean isRamp, timerRunning;
     private int teamNumber;
     private Button toggleButton;
-    private Chronometer timerView;
+    private CustomChronometer timerView;
     private Switch timerTypeSwitch;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
@@ -44,7 +44,7 @@ public class TimerActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference().child("Teams").child("" + teamNumber); //TODO: Receive team number before doing this!
 
-        timerView = (Chronometer) findViewById(R.id.timerView);
+        timerView = (CustomChronometer) findViewById(R.id.timerView);
         toggleButton = (Button) findViewById(R.id.toggleTimerButton);
         timerTypeSwitch = (Switch) findViewById(R.id.timerSwitch);
         isRamp = timerTypeSwitch.isChecked();
@@ -76,9 +76,11 @@ public class TimerActivity extends AppCompatActivity {
     public void toggleTimer(View view) {
         if(timerRunning) {
             //Turns timer off.
+            timerView.stop();
             toggleButton.setText("Start");
         } else {
             //Turns timer on.
+            timerView.start();
             toggleButton.setText("Stop");
         }
         timerRunning = !timerRunning;
