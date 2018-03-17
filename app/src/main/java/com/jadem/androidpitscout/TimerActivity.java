@@ -77,13 +77,14 @@ public class TimerActivity extends AppCompatActivity {
         if(timerRunning) {
             //Turns timer off.
             timerView.stop();
+            timerRunning = false;
             toggleButton.setText("Start");
         } else {
             //Turns timer on.
             timerView.start();
+            timerRunning = true;
             toggleButton.setText("Stop");
         }
-        timerRunning = !timerRunning;
     }
 
     public void confirmTimer(View view) {
@@ -92,6 +93,8 @@ public class TimerActivity extends AppCompatActivity {
 
     public void cancelTimer(View view) {
         //TODO: Complete
+        timerView.stop();
+        timerRunning = false;
     }
 
 }
