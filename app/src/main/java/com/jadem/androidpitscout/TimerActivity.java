@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -130,14 +131,15 @@ public class TimerActivity extends AppCompatActivity {
 
             LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             final RelativeLayout confirmDialog = (RelativeLayout) layoutInflater.inflate(R.layout.confirm_dialog, null);
+            final TextView questionView = (TextView)confirmDialog.findViewById(R.id.questionView);
             final EditText distanceEditText = (EditText)confirmDialog.findViewById(R.id.distanceView);
             final EditText lengthEditText = (EditText)confirmDialog.findViewById(R.id.lengthView);
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            String question = "What was the " + (isRamp ? "ramp " : "drive ") + "distance travelled?";
+            questionView.setText(question);
 
-            //TODO: Display whether it is ramp or drive. ex: isRamp ? "ramp " : "drive "
-            builder/*.setTitle("What was the distance travelled?")*/
-                    .setView(confirmDialog)
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setView(confirmDialog)
                     .setPositiveButton("Submit", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             //TODO: Send values to firebase (distances, times, and outcome)
