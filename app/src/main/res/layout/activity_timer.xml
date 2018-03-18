@@ -22,9 +22,9 @@
             android:layout_height="wrap_content"
             android:text="Drive"
             android:id="@+id/driveText"
-            android:layout_toLeftOf="@+id/timerSwitch"
+            android:layout_toStartOf="@+id/timerSwitch"
             android:layout_centerVertical="true"
-            android:paddingRight="@string/padding"/>
+            android:paddingRight="@dimen/padding"/>
 
         <Switch
             android:id="@+id/timerSwitch"
@@ -38,9 +38,9 @@
             android:layout_height="wrap_content"
             android:text="Ramp"
             android:id="@+id/rampText"
-            android:layout_toRightOf="@+id/timerSwitch"
+            android:layout_toEndOf="@+id/timerSwitch"
             android:layout_centerVertical="true"
-            android:paddingLeft="@string/padding"
+            android:paddingLeft="@dimen/padding"
             android:onClick="confirmTimer"/>
 
         <Button
@@ -70,7 +70,7 @@
         android:textSize="25sp"
         android:layout_below="@id/timerView"
         android:layout_centerHorizontal="true"
-        android:paddingTop="@string/padding"
+        android:paddingTop="@dimen/padding"
         android:onClick="toggleTimer"/>
 
     <LinearLayout
@@ -79,7 +79,7 @@
         android:orientation="horizontal"
         android:layout_below="@+id/toggleTimerButton"
         android:id="@+id/titleLayout"
-        android:paddingTop="@string/padding">
+        android:paddingTop="@dimen/padding">
 
         <TextView
             android:layout_width="0dp"
@@ -113,6 +113,6 @@
         android:id="@+id/timesList"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/titleLayout"
-        android:paddingTop="@string/padding" />
+        android:paddingTop="@dimen/padding" />
 
 </RelativeLayout>
