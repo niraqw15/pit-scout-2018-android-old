@@ -115,7 +115,8 @@ public class TimerActivity extends AppCompatActivity {
         //TODO: Complete
 
         if(!timerRunning && time != 0) {
-            float deciTime = time / 1000; //Stores time in seconds.
+            float deciTime = time;
+            deciTime = deciTime / 1000; //Stores time in seconds.
 
             timerView.setText("" + deciTime); //TODO: Temp
         }
