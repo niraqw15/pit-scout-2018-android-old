@@ -9,29 +9,54 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="What was the distance travelled?"
-        android:textSize="20sp"
+        android:textSize="25sp"
         android:textAlignment="center"
         android:textColor="@color/colorBlack"
-        android:paddingEnd="@dimen/padding" />
+        android:padding="@dimen/padding" />
+
+    <View
+        android:id="@+id/distanceOverline"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorBlack"
+        android:layout_below="@+id/questionView"/>
 
     <EditText
         android:id="@+id/distanceView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter treadmill distance (ft)"
+        android:hint="Enter distance (ft)"
+        android:textColorHint="@color/colorHintGray"
         android:textAlignment="center"
+        android:textColor="@color/colorBlack"
         android:digits="0123456789."
         android:inputType="numberDecimal"
-        android:layout_below="@+id/questionView"/>
+        android:layout_below="@+id/distanceOverline"/>
+
+    <View
+        android:id="@+id/distanceUnderline"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorBlack"
+        android:layout_below="@+id/distanceView"/>
 
     <EditText
         android:id="@+id/lengthView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Enter robot length (ft)"
+        android:textColorHint="@color/colorHintGray"
         android:textAlignment="center"
+        android:textColor="@color/colorBlack"
         android:digits="0123456789."
         android:inputType="numberDecimal"
-        android:layout_below="@+id/distanceView" />
+        android:layout_below="@+id/distanceUnderline" />
+
+    <View
+        android:id="@+id/lengthUnderline"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorBlack"
+        android:layout_below="@+id/lengthView"/>
 
 </RelativeLayout>
