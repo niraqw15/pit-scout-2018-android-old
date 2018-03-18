@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.CompoundButton;
@@ -27,6 +28,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+
 /**
  * Created by niraq on 3/15/2018.
  */
@@ -40,6 +43,8 @@ public class TimerActivity extends AppCompatActivity {
     private Switch timerTypeSwitch;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
+    private BaseAdapter trialAdapter;
+    private ArrayList<> trialList;
     private ValueEventListener trialEventListener;
     private long time = 0;
 
@@ -86,8 +91,12 @@ public class TimerActivity extends AppCompatActivity {
         trialEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(!dataSnapshot.child("Messages").getValue().equals(null)) {
+                if(!dataSnapshot.child("pitRampTime").getValue().equals(null)
+                        && !dataSnapshot.child("pitRampTimeOutcome").getValue().equals(null)
+                        && !dataSnapshot.child("pitDriveTime").getValue().equals(null)
+                        && !dataSnapshot.child("pitDriveTimeOutcome").getValue().equals(null)) {
                     //TODO: Complete this
+
                 }
             }
 
@@ -99,6 +108,7 @@ public class TimerActivity extends AppCompatActivity {
                 connectionErrorToast.show();
             }
         };
+        myRef.addValueEventListener(trialEventListener);
     }
 
     public void toggleTimer(View view) {
