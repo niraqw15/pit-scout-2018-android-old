@@ -108,8 +108,6 @@ public class TimerActivity extends AppCompatActivity {
             timerView.stop();
             timerRunning = false;
             toggleButton.setText("Start");
-
-            timerView.setText("" + time); //TODO: Temp
         } else {
             //Turns timer on.
             time = 0;
@@ -162,7 +160,7 @@ public class TimerActivity extends AppCompatActivity {
                             deciTime = deciTime / 1000; //Stores time in seconds.
 
                             double ratio = 7.4; //This is the treadmill ratio.
-                            boolean outcome = distance > ratio - length;
+                            boolean outcome = distance > (ratio - length);
 
                             myRef.child("pit" + (isRamp ? "Ramp" : "Drive") + "Time").setValue(deciTime);
                             myRef.child("pit" + (isRamp ? "Ramp" : "Drive") + "TimeOutcome").setValue(outcome);
