@@ -1,15 +1,22 @@
 package com.jadem.androidpitscout;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -118,6 +125,33 @@ public class TimerActivity extends AppCompatActivity {
         if(!timerRunning && time != 0) {
             float deciTime = time;
             deciTime = deciTime / 1000; //Stores time in seconds.
+
+            isRamp = timerTypeSwitch.isChecked();
+
+            LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            final RelativeLayout confirmDialog = (RelativeLayout) layoutInflater.inflate(R.layout.confirm_dialog, null);
+            final EditText distanceEditText = (EditText)confirmDialog.findViewById(R.id.distanceView);
+            final EditText lengthEditText = (EditText)confirmDialog.findViewById(R.id.lengthView);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            //TODO: Display whether it is ramp or drive. ex: isRamp ? "ramp " : "drive "
+            builder/*.setTitle("What was the distance travelled?")*/
+                    .setView(confirmDialog)
+                    .setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //TODO: Send values to firebase (distances, times, and outcome)
+                            //TODO: Add calculation for true or false
+                            time = 0;
+                            timerView.setText("00:00.00");
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    })
+                    .show();
 
             timerView.setText("" + deciTime); //TODO: Temp
         }
