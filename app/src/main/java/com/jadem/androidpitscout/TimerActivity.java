@@ -111,7 +111,7 @@ public class TimerActivity extends AppCompatActivity {
         } else {
             //Turns timer on.
             time = 0;
-            timerView.setBase(SystemClock.elapsedRealtime()); //TODO: Check if this is in milliseconds, convert if not
+            timerView.setBase(SystemClock.elapsedRealtime());
             timerView.start();
             timerRunning = true;
             toggleButton.setText("Stop");
@@ -119,8 +119,6 @@ public class TimerActivity extends AppCompatActivity {
     }
 
     public void confirmTimer(View view) {
-        //TODO: Complete
-
         if(!timerRunning && time != 0) {
             isRamp = timerTypeSwitch.isChecked();
 
@@ -162,11 +160,16 @@ public class TimerActivity extends AppCompatActivity {
                             double ratio = 7.4; //This is the treadmill ratio.
                             boolean outcome = distance > (ratio - length);
 
-                            myRef.child("pit" + (isRamp ? "Ramp" : "Drive") + "Time").setValue(deciTime);
-                            myRef.child("pit" + (isRamp ? "Ramp" : "Drive") + "TimeOutcome").setValue(outcome);
+                            //TODO: write to firebase as an array
+                            myRef.child("pit" + (isRamp ? "Ramp" : "Drive") + "Time")/*.child(arrayNum)*/.setValue(deciTime);
+                            myRef.child("pit" + (isRamp ? "Ramp" : "Drive") + "TimeOutcome")/*.child(arrayNum)*/.setValue(outcome);
 
                             time = 0;
                             timerView.setText("00:00.00");
+
+                            Toast successToast = Toast.makeText(getApplicationContext(), "Sent!", Toast.LENGTH_SHORT);
+                            successToast.setGravity(Gravity.CENTER, 0, 0);
+                            successToast.show();
                         }
                     })
                     .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -179,7 +182,6 @@ public class TimerActivity extends AppCompatActivity {
     }
 
     public void cancelTimer(View view) {
-        //TODO: Complete
         timerView.stop();
         time = 0;
         timerView.setText("00:00.00");
