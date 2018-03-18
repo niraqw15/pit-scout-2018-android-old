@@ -46,6 +46,7 @@ public class TimerActivity extends AppCompatActivity {
         myRef = database.getReference().child("Teams").child("" + teamNumber); //TODO: Receive team number before doing this!
 
         timerView = (CustomChronometer) findViewById(R.id.timerView);
+        timerView.setText("00:00.00");
         timerView.setOnChronometerTickListener(new CustomChronometer.OnChronometerTickListener() {
             @Override
             public void onChronometerTick(CustomChronometer cArg) {
@@ -111,6 +112,7 @@ public class TimerActivity extends AppCompatActivity {
     public void cancelTimer(View view) {
         //TODO: Complete
         timerView.stop();
+        timerView.setText("00:00.00");
         timerRunning = false;
     }
 
