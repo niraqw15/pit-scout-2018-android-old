@@ -25,7 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class TimerActivity extends AppCompatActivity {
 
-    private boolean isRamp, timerRunning;
+    private boolean isRamp, timerRunning, success;
     private int teamNumber;
     private Button toggleButton;
     private CustomChronometer timerView;
@@ -33,6 +33,7 @@ public class TimerActivity extends AppCompatActivity {
     private FirebaseDatabase database;
     private DatabaseReference myRef;
     private ValueEventListener trialEventListener;
+    private long time;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,9 +96,12 @@ public class TimerActivity extends AppCompatActivity {
     public void toggleTimer(View view) {
         if(timerRunning) {
             //Turns timer off.
+            time =  SystemClock.elapsedRealtime() - timerView.getBase();
             timerView.stop();
             timerRunning = false;
             toggleButton.setText("Start");
+
+            timerView.setText("" + time); //TODO: Temp
         } else {
             //Turns timer on.
             timerView.setBase(SystemClock.elapsedRealtime()); //TODO: Check if this is in milliseconds, convert if not
@@ -109,11 +113,16 @@ public class TimerActivity extends AppCompatActivity {
 
     public void confirmTimer(View view) {
         //TODO: Complete
+
+        if(!timerRunning) {
+
+        }
     }
 
     public void cancelTimer(View view) {
         //TODO: Complete
         timerView.stop();
+        time = 0;
         timerView.setText("00:00.00");
         timerRunning = false;
     }
