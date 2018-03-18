@@ -124,9 +124,6 @@ public class TimerActivity extends AppCompatActivity {
         //TODO: Complete
 
         if(!timerRunning && time != 0) {
-            float deciTime = time;
-            deciTime = deciTime / 1000; //Stores time in seconds.
-
             isRamp = timerTypeSwitch.isChecked();
 
             LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -144,6 +141,7 @@ public class TimerActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             //TODO: Send values to firebase (distances, times, and outcome)
                             //TODO: Add calculation for true or false
+
                             String distanceString = distanceEditText.getText().toString();
                             String lengthString = lengthEditText.getText().toString();
 
@@ -151,14 +149,23 @@ public class TimerActivity extends AppCompatActivity {
                             try {
                                 distance = Float.parseFloat(distanceString);
                                 length = Float.parseFloat(lengthString);
+
                             } catch (NumberFormatException e) {
                                 Toast decimalToast = Toast.makeText(getApplicationContext(), "Invalid numbers (check for extra decimals)", Toast.LENGTH_SHORT);
                                 decimalToast.setGravity(Gravity.CENTER, 0, 0);
                                 decimalToast.show();
                                 return;
+                                //TODO: Re-open dialog with data
                             }
 
-                            //TODO: send data to Firebase
+                            float deciTime = time;
+                            deciTime = deciTime / 1000; //Stores time in seconds.
+
+                            float ratio = 7.4; //This is the treadmill ratio.
+                            boolean outcome = distance > ratio - length;
+
+                            myRef.child("pit" + (isRamp ? "Ramp" : "Drive") + "Time").setValue(deciTime);
+                            myRef.child("pit" + (isRamp ? "Ramp" : "Drive") + "TimeOutcome").setValue(outcome);
 
                             time = 0;
                             timerView.setText("00:00.00");
