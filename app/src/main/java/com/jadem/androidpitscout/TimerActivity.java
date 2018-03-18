@@ -144,6 +144,22 @@ public class TimerActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             //TODO: Send values to firebase (distances, times, and outcome)
                             //TODO: Add calculation for true or false
+                            String distanceString = distanceEditText.getText().toString();
+                            String lengthString = lengthEditText.getText().toString();
+
+                            float distance = 0, length = 0;
+                            try {
+                                distance = Float.parseFloat(distanceString);
+                                length = Float.parseFloat(lengthString);
+                            } catch (NumberFormatException e) {
+                                Toast decimalToast = Toast.makeText(getApplicationContext(), "Invalid numbers (check for extra decimals)", Toast.LENGTH_SHORT);
+                                decimalToast.setGravity(Gravity.CENTER, 0, 0);
+                                decimalToast.show();
+                                return;
+                            }
+
+                            //TODO: send data to Firebase
+
                             time = 0;
                             timerView.setText("00:00.00");
                         }
