@@ -33,7 +33,7 @@ public class TimerActivity extends AppCompatActivity {
     private FirebaseDatabase database;
     private DatabaseReference myRef;
     private ValueEventListener trialEventListener;
-    private long time;
+    private long time = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +96,7 @@ public class TimerActivity extends AppCompatActivity {
     public void toggleTimer(View view) {
         if(timerRunning) {
             //Turns timer off.
-            time =  SystemClock.elapsedRealtime() - timerView.getBase();
+            time =  SystemClock.elapsedRealtime() - timerView.getBase(); //Stores time in milliseconds.
             timerView.stop();
             timerRunning = false;
             toggleButton.setText("Start");
@@ -114,8 +114,10 @@ public class TimerActivity extends AppCompatActivity {
     public void confirmTimer(View view) {
         //TODO: Complete
 
-        if(!timerRunning) {
+        if(!timerRunning && time != 0) {
+            float deciTime = time / 1000; //Stores time in seconds.
 
+            timerView.setText("" + deciTime); //TODO: Temp
         }
     }
 
