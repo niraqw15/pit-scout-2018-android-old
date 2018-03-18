@@ -46,6 +46,21 @@ public class TimerActivity extends AppCompatActivity {
         myRef = database.getReference().child("Teams").child("" + teamNumber); //TODO: Receive team number before doing this!
 
         timerView = (CustomChronometer) findViewById(R.id.timerView);
+        timerView.setOnChronometerTickListener(new CustomChronometer.OnChronometerTickListener() {
+            @Override
+            public void onChronometerTick(CustomChronometer cArg) {
+                long time = SystemClock.elapsedRealtime() - cArg.getBase();
+                int h   = (int)(time /3600000);
+                int m = (int)(time - h*3600000)/60000;
+                int s= (int)(time - h*3600000 - m*60000)/1000 ;
+                int ms = (int)(time - h*3600000 - m*60000 - s*1000)/10;
+                String mm = m < 10 ? "0"+m: m+"";
+                String ss = s < 10 ? "0"+s: s+"";
+                String msms = ms < 10 ? "0"+ms: ms+"";
+                cArg.setText(mm+":"+ss+"."+msms);
+            }
+        });
+
         toggleButton = (Button) findViewById(R.id.toggleTimerButton);
         timerTypeSwitch = (Switch) findViewById(R.id.timerSwitch);
         isRamp = timerTypeSwitch.isChecked();
