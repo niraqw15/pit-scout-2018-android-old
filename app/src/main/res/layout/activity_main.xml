@@ -24,7 +24,8 @@
             android:id="@+id/teamsList"
             android:layout_below="@+id/searchEditText"
             android:layout_centerHorizontal="true"
-            android:textSize="30dp"/>
+            android:textSize="30dp"
+            />
 
     </RelativeLayout>
 

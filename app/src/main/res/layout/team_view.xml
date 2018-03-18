@@ -12,21 +12,30 @@
 
     <Button
         android:id="@+id/timer"
-        android:layout_width="400dp"
+        android:layout_width="500dp"
         android:layout_height="100dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_below="@+id/teamNameAndNumber"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="200dp"
         android:hint="@string/timer_hint" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SEALs Notes: climber notes, possible autos, etc."
+        android:id="@+id/SEALsNotesTextView"
+        android:layout_below="@+id/timer"
+        android:textSize="27dp"
+        android:layout_marginTop="150dp"/>
+
     <EditText
-        android:id="@+id/SEALsNotes"
+        android:id="@+id/SEALsNotesEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/timer"
-        android:layout_marginTop="50dp"
-        android:hint="SEALs Notes: climber notes, possible autos, etc." />
+        android:layout_below="@+id/SEALsNotesTextView"
+        android:layout_marginTop="10dp"
+        />
 
 
 </RelativeLayout>
