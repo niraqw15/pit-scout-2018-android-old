@@ -104,6 +104,7 @@ public class TimerActivity extends AppCompatActivity {
             timerView.setText("" + time); //TODO: Temp
         } else {
             //Turns timer on.
+            time = 0;
             timerView.setBase(SystemClock.elapsedRealtime()); //TODO: Check if this is in milliseconds, convert if not
             timerView.start();
             timerRunning = true;
