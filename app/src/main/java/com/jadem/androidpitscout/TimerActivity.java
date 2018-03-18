@@ -161,7 +161,7 @@ public class TimerActivity extends AppCompatActivity {
                             float deciTime = time;
                             deciTime = deciTime / 1000; //Stores time in seconds.
 
-                            float ratio = 7.4; //This is the treadmill ratio.
+                            double ratio = 7.4; //This is the treadmill ratio.
                             boolean outcome = distance > ratio - length;
 
                             myRef.child("pit" + (isRamp ? "Ramp" : "Drive") + "Time").setValue(deciTime);
@@ -177,8 +177,6 @@ public class TimerActivity extends AppCompatActivity {
                         }
                     })
                     .show();
-
-            timerView.setText("" + deciTime); //TODO: Temp
         }
     }
 
