@@ -44,7 +44,7 @@ public class TimerActivity extends AppCompatActivity {
     private FirebaseDatabase database;
     private DatabaseReference myRef;
     private BaseAdapter trialAdapter;
-    private ArrayList<> trialList;
+    private List<> trialList; //TODO: Temporarily commented out, uncomment when type is sure
     private ValueEventListener trialEventListener;
     private long time = 0;
 
@@ -91,13 +91,7 @@ public class TimerActivity extends AppCompatActivity {
         trialEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(!dataSnapshot.child("pitRampTime").getValue().equals(null)
-                        && !dataSnapshot.child("pitRampTimeOutcome").getValue().equals(null)
-                        && !dataSnapshot.child("pitDriveTime").getValue().equals(null)
-                        && !dataSnapshot.child("pitDriveTimeOutcome").getValue().equals(null)) {
-                    //TODO: Complete this
-
-                }
+                //TODO: Complete this.
             }
 
             @Override
@@ -145,8 +139,6 @@ public class TimerActivity extends AppCompatActivity {
             builder.setView(confirmDialog)
                     .setPositiveButton("Submit", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            //TODO: Send values to firebase (distances, times, and outcome)
-                            //TODO: Add calculation for true or false
 
                             String distanceString = distanceEditText.getText().toString();
                             String lengthString = lengthEditText.getText().toString();
@@ -170,7 +162,7 @@ public class TimerActivity extends AppCompatActivity {
                             double ratio = 7.4; //This is the treadmill ratio.
                             boolean outcome = distance > (ratio - length);
 
-                            //TODO: write to firebase as an array
+                            //TODO: Write to firebase as an array (possibly use time in addition for ordering? - would need to get checked by Sam)
                             myRef.child("pit" + (isRamp ? "Ramp" : "Drive") + "Time")/*.child(arrayNum)*/.setValue(deciTime);
                             myRef.child("pit" + (isRamp ? "Ramp" : "Drive") + "TimeOutcome")/*.child(arrayNum)*/.setValue(outcome);
 
