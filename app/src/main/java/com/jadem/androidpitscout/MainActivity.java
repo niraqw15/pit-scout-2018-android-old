@@ -1,10 +1,12 @@
 package com.jadem.androidpitscout;
 
+
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -20,13 +22,16 @@ public class MainActivity extends AppCompatActivity {
     public static FirebaseDatabase dataBase;
     public static DatabaseReference ref;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         dataBase = FirebaseDatabase.getInstance();
         ref = dataBase.getReference();
+        context = this;
+
 
         tempButton = (Button) findViewById(R.id.temporaryButton);
 
@@ -36,9 +41,15 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, ViewTeam.class));
             }
         });
+
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+        listView = (ListView) findViewById(R.id.timesList);
+        listView.setAdapter(adapter);
+        updateListView();
+
     }
 
-    public void getTeams(View view) {
+      public void getTeams(View view) {
         searchBar = (EditText) findViewById(R.id.searchEditText);
         searchBar.setFocusable(false);
         updateListView();
@@ -76,4 +87,5 @@ public class MainActivity extends AppCompatActivity {
         searchAdapter.notifyDataSetChanged();
     }
     }
+
 
