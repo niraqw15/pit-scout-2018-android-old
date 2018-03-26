@@ -192,7 +192,7 @@ public class TimerActivity extends AppCompatActivity {
                             boolean outcome = distance > (ratio - length);
 
                             //TODO: Write to firebase as an array (possibly use time in addition for ordering? - would need to get checked by Sam)
-                            //TODO: Make sure that arrayPosition is updated to ramp or drive before writing
+                            //TODO: Make sure that arrayPosition is updated to ramp or drive before writing (doesn't currently)
                             myRef.child("pit" + (isRamp ? "Ramp" : "Drive") + "Time").child("" + arrayPosition).setValue(deciTime);
                             myRef.child("pit" + (isRamp ? "Ramp" : "Drive") + "TimeOutcome").child("" + arrayPosition).setValue(outcome);
 
