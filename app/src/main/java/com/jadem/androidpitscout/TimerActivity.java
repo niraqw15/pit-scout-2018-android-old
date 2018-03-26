@@ -39,6 +39,7 @@ public class TimerActivity extends AppCompatActivity {
 
     private boolean isRamp, timerRunning, success;
     private int teamNumber;
+    private long arrayPosition = -1;
     private Button toggleButton;
     private CustomChronometer timerView;
     private Switch timerTypeSwitch;
@@ -99,6 +100,7 @@ public class TimerActivity extends AppCompatActivity {
                 if(dataSnapshot.hasChild(timeTypeString)) {
                     if (dataSnapshot.child(timeTypeString).hasChildren()) {
                         trialList = new ArrayList<TrialData>();
+                        arrayPosition = dataSnapshot.child(timeTypeString).getChildrenCount();
                         for(int trialNum = 0; trialNum < dataSnapshot.child(timeTypeString).getChildrenCount(); trialNum++) {
 
                             float time = 0;
@@ -190,8 +192,9 @@ public class TimerActivity extends AppCompatActivity {
                             boolean outcome = distance > (ratio - length);
 
                             //TODO: Write to firebase as an array (possibly use time in addition for ordering? - would need to get checked by Sam)
-                            myRef.child("pit" + (isRamp ? "Ramp" : "Drive") + "Time")/*.child(arrayNum)*/.setValue(deciTime);
-                            myRef.child("pit" + (isRamp ? "Ramp" : "Drive") + "TimeOutcome")/*.child(arrayNum)*/.setValue(outcome);
+                            //TODO: Make sure that arrayPosition is updated to ramp or drive before writing
+                            myRef.child("pit" + (isRamp ? "Ramp" : "Drive") + "Time").child("" + arrayPosition).setValue(deciTime);
+                            myRef.child("pit" + (isRamp ? "Ramp" : "Drive") + "TimeOutcome").child("" + arrayPosition).setValue(outcome);
 
                             time = 0;
                             timerView.setText("00:00.00");
