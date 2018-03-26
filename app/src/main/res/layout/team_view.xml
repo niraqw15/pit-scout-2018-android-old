@@ -8,25 +8,41 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="1678- Citrus Circuits"
-        android:textSize="45dp" />
+        android:textSize="25dp"
+        android:paddingLeft="3dp"
+        />
 
     <Button
         android:id="@+id/timer"
-        android:layout_width="400dp"
-        android:layout_height="100dp"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_below="@+id/teamNameAndNumber"
+        android:layout_marginTop="100dp"
+        android:text="TIMER"
+        android:paddingLeft="3dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SEALs Notes: climber notes, possible autos, etc."
+        android:id="@+id/SEALsNotesTextView"
+        android:layout_below="@+id/timer"
+        android:textSize="15dp"
         android:layout_marginTop="50dp"
-        android:hint="@string/timer_hint" />
+        android:paddingLeft="3dp"
+        />
 
     <EditText
-        android:id="@+id/SEALsNotes"
+        android:id="@+id/SEALsNotesEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/timer"
-        android:layout_marginTop="50dp"
-        android:hint="SEALs Notes: climber notes, possible autos, etc." />
+        android:layout_below="@+id/SEALsNotesTextView"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="3dp"
+        />
 
 
 </RelativeLayout>

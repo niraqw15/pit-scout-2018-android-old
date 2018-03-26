@@ -1,33 +1,26 @@
 package com.jadem.androidpitscout;
 
-import android.app.Activity;
-import android.content.Context;
+
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.text.Editable;
+import android.text.TextWatcher;
+
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.Timer;
-
 public class MainActivity extends AppCompatActivity {
-    ListView listView;
-    ArrayAdapter<String> adapter;
+    ArrayAdapter<String> searchAdapter;
+    Button tempButton;
     EditText searchBar;
-    Activity activity;
     public static FirebaseDatabase dataBase;
     public static DatabaseReference ref;
-    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,49 +32,60 @@ public class MainActivity extends AppCompatActivity {
         ref = dataBase.getReference();
         context = this;
 
+
+        tempButton = (Button) findViewById(R.id.temporaryButton);
+
+        tempButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, ViewTeam.class));
+            }
+        });
+
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         listView = (ListView) findViewById(R.id.timesList);
         listView.setAdapter(adapter);
         updateListView();
+
     }
 
-    public void getTeams(View view) {
+      public void getTeams(View view) {
         searchBar = (EditText) findViewById(R.id.searchEditText);
         searchBar.setFocusable(false);
         updateListView();
         searchBar.setFocusableInTouchMode(true);
-
     }
 
     private void updateListView() {
         final EditText searchBar = (EditText) findViewById(R.id.searchEditText);
+        searchBar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence Register, int start, int count, int after) {
+            }
 
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (searchBar.getText().toString().equals("")) {
+                    searchAdapter.clear();
+                    searchBar.setFocusable(false);
+                } else {
+                    for (int i = 0; i < searchAdapter.getCount(); ) {
+                        if (searchAdapter.getItem(i).startsWith((searchBar.getText().toString()).toUpperCase())){//|| adapter.getItem(i).contains((searchBar.getText().toString()).toUpperCase())) {
+                            i++;
+                        } else {
+                            searchAdapter.remove(searchAdapter.getItem(i));
+                        }
+                    }
+                }
+                ;
+            }
+        });
+        searchAdapter.notifyDataSetChanged();
     }
-
-    //TODO: Temporary
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-    getMenuInflater().inflate(R.menu.main, menu);
-        return true;
     }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if(id == R.id.action_timer) {
-            Intent intent = new Intent(context, TimerActivity.class);
-            startActivity(intent);
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-}
-
 
 
