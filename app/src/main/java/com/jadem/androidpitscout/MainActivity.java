@@ -1,46 +1,22 @@
 package com.jadem.androidpitscout;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
-import java.util.ArrayList;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-
 
 public class MainActivity extends AppCompatActivity {
-    ListView listView;
     ArrayAdapter<String> searchAdapter;
-    ArrayList<String> ListOfTeams;
-    ListAdapter adapter;
-    String teamName;
-    String teamNumber;
-    String teamInput;
     Button tempButton;
     EditText searchBar;
-    Activity activity;
     public static FirebaseDatabase dataBase;
     public static DatabaseReference ref;
 
