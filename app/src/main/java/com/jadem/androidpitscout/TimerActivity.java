@@ -29,6 +29,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by niraq on 3/15/2018.
@@ -44,7 +45,7 @@ public class TimerActivity extends AppCompatActivity {
     private FirebaseDatabase database;
     private DatabaseReference myRef;
     private BaseAdapter trialAdapter;
-    private List<> trialList; //TODO: Temporarily commented out, uncomment when type is sure
+    private List<TrialData> trialList;
     private ValueEventListener trialEventListener;
     private long time = 0;
 
@@ -54,6 +55,7 @@ public class TimerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_timer);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
+        //TODO: Get data from intent extras
         teamNumber = 1;//TODO: Temporary for testing, remove when done
 
         timerRunning = false;
@@ -91,12 +93,37 @@ public class TimerActivity extends AppCompatActivity {
         trialEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                //TODO: Complete this.
+                //TODO: Complete this (needs to update data and ListView)
+                //TODO: Trigger this when isRamp is changed
+                String timeTypeString = "pit" + (isRamp ? "Ramp" : "Drive") + "Time";
+                if(dataSnapshot.hasChild(timeTypeString)) {
+                    if (dataSnapshot.child(timeTypeString).hasChildren()) {
+                        trialList = new ArrayList<TrialData>();
+                        for(int trialNum = 0; trialNum < dataSnapshot.child(timeTypeString).getChildrenCount(); trialNum++) {
+
+                            float time = 0;
+                            boolean outcome = false;
+                            if(dataSnapshot.child(timeTypeString).hasChild("" + trialNum) && dataSnapshot.child(timeTypeString + "Outcome").hasChild("" + trialNum)) {
+                                try {
+                                    time = (Float) dataSnapshot.child(timeTypeString).child("" + trialNum).getValue();
+                                    outcome = (Boolean) dataSnapshot.child(timeTypeString + "Outcome").child("" + trialNum).getValue();
+                                } catch (NullPointerException npe) {
+                                    Log.e("(NullPointerException", "Incorrect data type for team " + teamNumber + ", trial " + trialNum + ": " + (isRamp ? "Ramp" : "Drive"));
+                                }
+                            }
+
+                            //If time == 0, the data for that trial is invalid.
+                            TrialData data = new TrialData(time, outcome);
+                            trialList.add(data);
+
+                        }
+                    }
+                }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.e("Error", "ChatRoomEventListener Cancelled");
+                Log.e("Error", "trialEventListener Cancelled");
                 Toast connectionErrorToast = Toast.makeText(getApplicationContext(), "Connection Error", Toast.LENGTH_SHORT);
                 connectionErrorToast.setGravity(Gravity.CENTER, 0, 0);
                 connectionErrorToast.show();
