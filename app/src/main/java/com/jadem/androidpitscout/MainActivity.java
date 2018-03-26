@@ -10,21 +10,41 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
+import java.util.ArrayList;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity {
     ListView listView;
-    ArrayAdapter<String> adapter;
+    ArrayAdapter<String> searchAdapter;
+    ArrayList<String> ListOfTeams;
+    ListAdapter adapter;
+    String teamName;
+    String teamNumber;
+    String teamInput;
+    Button tempButton;
     EditText searchBar;
     Activity activity;
     public static FirebaseDatabase dataBase;
     public static DatabaseReference ref;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,10 +52,14 @@ public class MainActivity extends AppCompatActivity {
         dataBase = FirebaseDatabase.getInstance();
         ref = dataBase.getReference();
 
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
-        listView = (ListView) findViewById(R.id.teamsList);
-        listView.setAdapter(adapter);
-        updateListView();
+        tempButton = (Button) findViewById(R.id.temporaryButton);
+
+        tempButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, ViewTeam.class));
+            }
+        });
     }
 
     public void getTeams(View view) {
@@ -43,41 +67,37 @@ public class MainActivity extends AppCompatActivity {
         searchBar.setFocusable(false);
         updateListView();
         searchBar.setFocusableInTouchMode(true);
-
     }
 
     private void updateListView() {
-        final EditText searchBar = (EditText)findViewById(R.id.searchEditText);
+        final EditText searchBar = (EditText) findViewById(R.id.searchEditText);
         searchBar.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence Register, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence Register, int start, int count, int after) {
+            }
+
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
             @Override
             public void afterTextChanged(Editable s) {
-                if (searchBar.getText().toString().equals("")){
-                    adapter.clear();
+                if (searchBar.getText().toString().equals("")) {
+                    searchAdapter.clear();
                     searchBar.setFocusable(false);
-                }
-                else{
-                    for (int i = 0; i < adapter.getCount();){
-                        if(adapter.getItem(i).startsWith((searchBar.getText().toString()).toUpperCase()) || adapter.getItem(i).contains((searchBar.getText().toString()).toUpperCase())){
+                } else {
+                    for (int i = 0; i < searchAdapter.getCount(); ) {
+                        if (searchAdapter.getItem(i).startsWith((searchBar.getText().toString()).toUpperCase())){//|| adapter.getItem(i).contains((searchBar.getText().toString()).toUpperCase())) {
                             i++;
-                        }else{
-                            adapter.remove(adapter.getItem(i));
+                        } else {
+                            searchAdapter.remove(searchAdapter.getItem(i));
                         }
                     }
-                };
+                }
+                ;
             }
         });
-        adapter.notifyDataSetChanged();
+        searchAdapter.notifyDataSetChanged();
     }
-    public void teamPage(View view) {
-        Intent intent = new Intent(this, ViewTeam.class);
-
-}
-}
-
-
-
+    }
 
