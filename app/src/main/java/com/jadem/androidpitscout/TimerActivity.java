@@ -2,6 +2,7 @@ package com.jadem.androidpitscout;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -11,11 +12,14 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -26,6 +30,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by niraq on 3/15/2018.
@@ -38,10 +47,14 @@ public class TimerActivity extends AppCompatActivity {
     private Button toggleButton;
     private CustomChronometer timerView;
     private Switch timerTypeSwitch;
+    private ListView timerListView;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
+    private Map<String, List<TrialData>> trialListMap;
+    private Map<String, Long> trialCountMap;
     private ValueEventListener trialEventListener;
     private long time = 0;
+    private BaseAdapter timerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +62,12 @@ public class TimerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_timer);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        teamNumber = 1;//TODO: Temporary for testing, remove when done
+        getExtras();
 
         timerRunning = false;
 
         database = FirebaseDatabase.getInstance();
-        myRef = database.getReference().child("Teams").child("" + teamNumber); //TODO: Receive team number before doing this!
+        myRef = database.getReference().child("Teams").child("" + teamNumber);
 
         timerView = (CustomChronometer) findViewById(R.id.timerView);
         timerView.setText("00:00.00");
@@ -62,7 +75,7 @@ public class TimerActivity extends AppCompatActivity {
             @Override
             public void onChronometerTick(CustomChronometer cArg) {
                 long time = SystemClock.elapsedRealtime() - cArg.getBase();
-                int h   = (int)(time /3600000);
+                int h = (int)(time /3600000);
                 int m = (int)(time - h*3600000)/60000;
                 int s= (int)(time - h*3600000 - m*60000)/1000 ;
                 int ms = (int)(time - h*3600000 - m*60000 - s*1000)/10;
@@ -79,26 +92,143 @@ public class TimerActivity extends AppCompatActivity {
         timerTypeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 isRamp = isChecked;
-                //TODO: Change what the listview displays (and update it?)
+                timerAdapter.notifyDataSetChanged();
             }
         });
+
+        //Allows the adapter to work without data
+        trialListMap = new HashMap<>();
+        trialListMap.put("Ramp", new ArrayList<TrialData>());
+        trialListMap.put("Drive", new ArrayList<TrialData>());
+
+        trialCountMap = new HashMap<>();
+        trialCountMap.put("Ramp", Long.valueOf(0));
+        trialCountMap.put("Drive", Long.valueOf(0));
+
+        timerAdapter = new BaseAdapter() {
+            @Override
+            public int getCount() {
+                return trialListMap.get(isRamp ? "Ramp" : "Drive").size();
+            }
+
+            //TODO: Possibly make these methods actually do something.
+            @Override
+            public Object getItem(int i) {
+                return null;
+            }
+
+            @Override
+            public long getItemId(int i) {
+                return 0;
+            }
+
+            @Override //Partially modelled after http://stackoverflow.com/questions/35761897/how-do-i-make-a-relative-layout-an-item-of-my-listview-and-detect-gestures-over
+            public View getView(int position, View convertView, ViewGroup parent) {
+                LayoutInflater layoutInflater;
+                ViewHolder listViewHolder;
+
+                if(convertView == null){
+                    layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    convertView = layoutInflater.inflate(R.layout.layout_timer_list_item, parent, false);
+
+                    listViewHolder = new ViewHolder();
+                    listViewHolder.trialView = (TextView) convertView.findViewById(R.id.trialView);
+                    listViewHolder.timeView = (TextView) convertView.findViewById(R.id.timeView);
+                    listViewHolder.outcomeView = (TextView) convertView.findViewById(R.id.outcomeView);
+                    convertView.setTag(listViewHolder);
+                } else {
+                    listViewHolder = (ViewHolder) convertView.getTag();
+                }
+
+                String posString = "" + (position + 1);
+                listViewHolder.trialView.setText(posString);
+                String timeString = trialListMap.get(isRamp ? "Ramp" : "Drive").get(position).getTimeString();
+                listViewHolder.timeView.setText(timeString);
+                String outcomeString = trialListMap.get(isRamp ? "Ramp" : "Drive").get(position).getOutcomeString();
+                listViewHolder.outcomeView.setText(outcomeString);
+
+                return convertView;
+            }
+        };
+        timerListView = (ListView) findViewById(R.id.timesList);
+        timerListView.setAdapter(timerAdapter);
 
         trialEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(!dataSnapshot.child("Messages").getValue().equals(null)) {
-                    //TODO: Complete this
+                //TODO: Should these be final?
+                String dTime = "pitDriveTime";
+                String rTime = "pitRampTime";
+                String dOut = "pitDriveTimeOutcome";
+                String rOut = "pitRampTimeOutcome";
+
+                if((dataSnapshot.hasChild(dTime) && dataSnapshot.hasChild(dOut)) || (dataSnapshot.hasChild(rTime) && dataSnapshot.hasChild(rOut))) {
+
+                    List<TrialData> rampList = new ArrayList<TrialData>();
+
+                    //Fills ramp list.
+                    for(int trialNum = 0; trialNum < dataSnapshot.child(rTime).getChildrenCount(); trialNum++) {
+
+                        double time = 0;
+                        boolean outcome = false;
+                        if(dataSnapshot.child(rTime).hasChild("" + trialNum) && dataSnapshot.child(rOut).hasChild("" + trialNum)) {
+                            try {
+                                time = (Double) dataSnapshot.child(rTime).child("" + trialNum).getValue();
+                                outcome = (Boolean) dataSnapshot.child(rOut).child("" + trialNum).getValue();
+                            } catch (NullPointerException npe) {
+                                Log.e("(NullPointerException", "Incorrect data type for team: " + teamNumber + ", trial: " + trialNum + ", type: ramp");
+                            }
+                        }
+
+                        //If time == 0, the data for that trial is invalid.
+                        TrialData data = new TrialData(time, outcome);
+                        rampList.add(data);
+
+                    }
+
+                    List<TrialData> driveList = new ArrayList<TrialData>();
+
+                    //Fills drive list.
+                    for(int trialNum = 0; trialNum < dataSnapshot.child(dTime).getChildrenCount(); trialNum++) {
+
+                        double time = 0;
+                        boolean outcome = false;
+                        if(dataSnapshot.child(dTime).hasChild("" + trialNum) && dataSnapshot.child(dOut).hasChild("" + trialNum)) {
+                            try {
+                                time = (Double) dataSnapshot.child(dTime).child("" + trialNum).getValue();
+                                outcome = (Boolean) dataSnapshot.child(dOut).child("" + trialNum).getValue();
+                            } catch (NullPointerException npe) {
+                                Log.e("(NullPointerException", "Incorrect data type for team: " + teamNumber + ", trial: " + trialNum + ", type: drive");
+                            }
+                        }
+
+                        //If time == 0, the data for that trial is invalid.
+                        TrialData data = new TrialData(time, outcome);
+                        driveList.add(data);
+
+                    }
+
+                    trialListMap = new HashMap<>();
+                    trialListMap.put("Ramp", rampList);
+                    trialListMap.put("Drive", driveList);
+
+                    trialCountMap = new HashMap<>();
+                    trialCountMap.put("Ramp", dataSnapshot.child(rTime).getChildrenCount());
+                    trialCountMap.put("Drive", dataSnapshot.child(dTime).getChildrenCount());
+
+                    timerAdapter.notifyDataSetChanged();
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.e("Error", "ChatRoomEventListener Cancelled");
+                Log.e("Error", "trialEventListener Cancelled");
                 Toast connectionErrorToast = Toast.makeText(getApplicationContext(), "Connection Error", Toast.LENGTH_SHORT);
                 connectionErrorToast.setGravity(Gravity.CENTER, 0, 0);
                 connectionErrorToast.show();
             }
         };
+        myRef.addValueEventListener(trialEventListener);
     }
 
     public void toggleTimer(View view) {
@@ -108,6 +238,14 @@ public class TimerActivity extends AppCompatActivity {
             timerView.stop();
             timerRunning = false;
             toggleButton.setText("Start");
+            int h = (int)(time /3600000);
+            int m = (int)(time - h*3600000)/60000;
+            int s= (int)(time - h*3600000 - m*60000)/1000 ;
+            int ms = (int)(time - h*3600000 - m*60000 - s*1000)/10;
+            String mm = m < 10 ? "0"+m: m+"";
+            String ss = s < 10 ? "0"+s: s+"";
+            String msms = ms < 10 ? "0"+ms: ms+"";
+            timerView.setText(mm+":"+ss+"."+msms);
         } else {
             //Turns timer on.
             time = 0;
@@ -135,8 +273,6 @@ public class TimerActivity extends AppCompatActivity {
             builder.setView(confirmDialog)
                     .setPositiveButton("Submit", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            //TODO: Send values to firebase (distances, times, and outcome)
-                            //TODO: Add calculation for true or false
 
                             String distanceString = distanceEditText.getText().toString();
                             String lengthString = lengthEditText.getText().toString();
@@ -154,15 +290,15 @@ public class TimerActivity extends AppCompatActivity {
                                 //TODO: Re-open dialog with data
                             }
 
-                            float deciTime = time;
+                            double deciTime = time;
                             deciTime = deciTime / 1000; //Stores time in seconds.
 
-                            double ratio = 7.4; //This is the treadmill ratio.
+                            double ratio = 7.4; //This is the treadmill ratio. //TODO: Make this variable
                             boolean outcome = distance > (ratio - length);
 
-                            //TODO: write to firebase as an array
-                            myRef.child("pit" + (isRamp ? "Ramp" : "Drive") + "Time")/*.child(arrayNum)*/.setValue(deciTime);
-                            myRef.child("pit" + (isRamp ? "Ramp" : "Drive") + "TimeOutcome")/*.child(arrayNum)*/.setValue(outcome);
+                            String typeString = isRamp ? "Ramp" : "Drive";
+                            myRef.child("pit" + typeString + "Time").child("" + trialCountMap.get(typeString)).setValue(deciTime);
+                            myRef.child("pit" + typeString + "TimeOutcome").child("" + trialCountMap.get(typeString)).setValue(outcome);
 
                             time = 0;
                             timerView.setText("00:00.00");
@@ -188,4 +324,16 @@ public class TimerActivity extends AppCompatActivity {
         timerRunning = false;
     }
 
+    private void getExtras() {
+        Intent previous = getIntent();
+        teamNumber = previous.getIntExtra("teamNumber", 0);
+    }
+
+}
+
+//For temporarily holding values of each chat box.
+class ViewHolder {
+    TextView trialView;
+    TextView timeView;
+    TextView outcomeView;
 }

@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:paddingBottom="@dimen/padding">
+    android:paddingBottom="@dimen/padding"
+    android:paddingTop="@dimen/padding">
 
     <TextView
         android:layout_width="0dp"
@@ -11,6 +12,7 @@
         android:layout_height="match_parent"
         android:id="@+id/trialView"
         android:hint="Trial"
+        android:textColor="@color/colorBlack"
         android:textAlignment="center"/>
 
     <TextView
@@ -19,6 +21,7 @@
         android:layout_height="match_parent"
         android:id="@+id/timeView"
         android:hint="Time"
+        android:textColor="@color/colorBlack"
         android:textAlignment="center"/>
 
     <TextView
@@ -27,6 +30,7 @@
         android:layout_height="match_parent"
         android:id="@+id/outcomeView"
         android:hint="Outcome"
+        android:textColor="@color/colorBlack"
         android:textAlignment="center"/>
 
 </LinearLayout>
