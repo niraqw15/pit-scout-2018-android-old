@@ -41,18 +41,12 @@ public class ViewTeam extends AppCompatActivity {
         TeamName = (TextView) findViewById(R.id.teamNameAndNumber);
 
         SEALsNotesEditText.setFocusable(true);
+    }
 
-
-
-        //TODO: When the TimerActivity is added, uncomment
-        TimerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, TimerActivity.class);
-                int teamNumber = 1; //TODO: Temp
-                intent.putExtra("teamNumber", teamNumber);
-                startActivity(intent);
-            }
-        });
+    public void openTimer(View view) {
+        Intent intent = new Intent(context, TimerActivity.class);
+        int teamNumber = 1; //TODO: Temp
+        intent.putExtra("teamNumber", teamNumber);
+        startActivity(intent);
     }
 }
