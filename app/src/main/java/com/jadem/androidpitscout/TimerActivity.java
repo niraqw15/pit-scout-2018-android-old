@@ -171,11 +171,11 @@ public class TimerActivity extends AppCompatActivity {
                         //Fills ramp list.
                         for(int trialNum = 0; trialNum < dataSnapshot.child(rTime).getChildrenCount(); trialNum++) {
 
-                            float time = 0;
+                            double time = 0;
                             boolean outcome = false;
                             if(dataSnapshot.child(rTime).hasChild("" + trialNum) && dataSnapshot.child(rOut).hasChild("" + trialNum)) {
                                 try {
-                                    time = (Float) dataSnapshot.child(rTime).child("" + trialNum).getValue();
+                                    time = (Double) dataSnapshot.child(rTime).child("" + trialNum).getValue();
                                     outcome = (Boolean) dataSnapshot.child(rOut).child("" + trialNum).getValue();
                                 } catch (NullPointerException npe) {
                                     Log.e("(NullPointerException", "Incorrect data type for team: " + teamNumber + ", trial: " + trialNum + ", type: ramp");
@@ -193,11 +193,11 @@ public class TimerActivity extends AppCompatActivity {
                         //Fills drive list.
                         for(int trialNum = 0; trialNum < dataSnapshot.child(dTime).getChildrenCount(); trialNum++) {
 
-                            float time = 0;
+                            double time = 0;
                             boolean outcome = false;
                             if(dataSnapshot.child(dTime).hasChild("" + trialNum) && dataSnapshot.child(dOut).hasChild("" + trialNum)) {
                                 try {
-                                    time = (Float) dataSnapshot.child(dTime).child("" + trialNum).getValue();
+                                    time = (Double) dataSnapshot.child(dTime).child("" + trialNum).getValue();
                                     outcome = (Boolean) dataSnapshot.child(dOut).child("" + trialNum).getValue();
                                 } catch (NullPointerException npe) {
                                     Log.e("(NullPointerException", "Incorrect data type for team: " + teamNumber + ", trial: " + trialNum + ", type: drive");
