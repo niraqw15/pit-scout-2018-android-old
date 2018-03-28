@@ -96,6 +96,11 @@ public class TimerActivity extends AppCompatActivity {
             }
         });
 
+        //Allows the adapter to work without data
+        trialListMap = new HashMap<>();
+        trialListMap.put("Ramp", new ArrayList<TrialData>());
+        trialListMap.put("Drive", new ArrayList<TrialData>());
+
         timerAdapter = new BaseAdapter() {
             @Override
             public int getCount() {
