@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, ViewTeam.class);
-                intent.putExtra("teamNumber", searchBar.getText()); //TODO: Temporary for testing. Remove when ListView is finished
+                intent.putExtra("teamNumber", Integer.parseInt(searchBar.getText().toString())); //TODO: Temporary for testing. Remove when ListView is finished
                 startActivity(intent);
             }
         });

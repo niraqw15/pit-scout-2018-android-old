@@ -42,6 +42,9 @@ public class ViewTeam extends AppCompatActivity {
         timerButton = (Button) findViewById(R.id.timer);
         teamName = (TextView) findViewById(R.id.teamNameAndNumber);
 
+        String teamNameString = "" + teamNumber;
+        teamName.setText(teamNameString);
+
         SEALsNotesEditText.setFocusable(true);
     }
 
