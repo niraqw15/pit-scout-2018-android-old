@@ -105,6 +105,7 @@ public class TimerActivity extends AppCompatActivity {
         trialCountMap.put("Ramp", Long.valueOf(0));
         trialCountMap.put("Drive", Long.valueOf(0));
 
+        //TODO: Error: When switch is set to what listView is not displaying, tapping a list listitem will crash app.
         timerAdapter = new BaseAdapter() {
             @Override
             public int getCount() {
