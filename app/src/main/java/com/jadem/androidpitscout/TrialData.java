@@ -27,4 +27,20 @@ public class TrialData {
         return outcome;
     }
 
+    public String getTimeString() {
+        //TODO: make sure this is a properly formatted string
+        int h = (int)(time /3600000);
+        int m = (int)(time - h*3600000)/60000;
+        int s= (int)(time - h*3600000 - m*60000)/1000 ;
+        int ms = (int)(time - h*3600000 - m*60000 - s*1000)/10;
+        String mm = m < 10 ? "0"+m: m+"";
+        String ss = s < 10 ? "0"+s: s+"";
+        String msms = ms < 10 ? "0"+ms: ms+"";
+        return (mm+":"+ss+"."+msms);
+    }
+
+    public String getOutcomeString() {
+        return String.valueOf(outcome);
+    }
+
 }
