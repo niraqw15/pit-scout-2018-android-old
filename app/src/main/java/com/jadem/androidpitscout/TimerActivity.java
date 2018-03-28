@@ -2,6 +2,7 @@ package com.jadem.androidpitscout;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -61,8 +62,7 @@ public class TimerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_timer);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        //TODO: Get data from intent extras
-        teamNumber = 1;//TODO: Temporary for testing, remove when done
+        getExtras();
 
         timerRunning = false;
 
@@ -323,6 +323,11 @@ public class TimerActivity extends AppCompatActivity {
         time = 0;
         timerView.setText("00:00.00");
         timerRunning = false;
+    }
+
+    private void getExtras() {
+        Intent previous = getIntent();
+        teamNumber = previous.getIntExtra("teamNumber", 0);
     }
 
 }
