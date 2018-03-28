@@ -140,7 +140,7 @@ public class TimerActivity extends AppCompatActivity {
                     listViewHolder = (ViewHolder) convertView.getTag();
                 }
 
-                String posString = "" + position + 1; //TODO: Check that this gives the correct trial number
+                String posString = "" + (position + 1);
                 listViewHolder.trialView.setText(posString);
                 String timeString = trialListMap.get(isRamp ? "Ramp" : "Drive").get(position).getTimeString();
                 listViewHolder.timeView.setText(timeString);
