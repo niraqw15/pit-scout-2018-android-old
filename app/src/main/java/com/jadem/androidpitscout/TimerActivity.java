@@ -70,7 +70,7 @@ public class TimerActivity extends AppCompatActivity {
             @Override
             public void onChronometerTick(CustomChronometer cArg) {
                 long time = SystemClock.elapsedRealtime() - cArg.getBase();
-                int h   = (int)(time /3600000);
+                int h = (int)(time /3600000);
                 int m = (int)(time - h*3600000)/60000;
                 int s= (int)(time - h*3600000 - m*60000)/1000 ;
                 int ms = (int)(time - h*3600000 - m*60000 - s*1000)/10;
