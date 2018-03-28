@@ -19,4 +19,12 @@ public class TrialData {
         outcome = newOutcome;
     }
 
+    public float getTime() {
+        return  time;
+    }
+
+    public boolean getOutcome() {
+        return outcome;
+    }
+
 }
