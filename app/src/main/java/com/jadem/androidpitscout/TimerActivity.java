@@ -41,7 +41,6 @@ public class TimerActivity extends AppCompatActivity {
 
     private boolean isRamp, timerRunning, success;
     private int teamNumber;
-    private long arrayPosition = -1;
     private Button toggleButton;
     private CustomChronometer timerView;
     private Switch timerTypeSwitch;
@@ -98,7 +97,6 @@ public class TimerActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 //TODO: Complete this (needs to update data and ListView)
-                //TODO: -Trigger this when isRamp is changed- Instead, just have this read anything it will ever nead (read both ramp and drive data)
 
                 //TODO: Should these be final?
                 String dTime = "pitDriveTime";
@@ -107,9 +105,8 @@ public class TimerActivity extends AppCompatActivity {
                 String rOut = "pitRampTimeOutcome";
                 if(dataSnapshot.hasChild(dTime) && dataSnapshot.hasChild(rTime) && dataSnapshot.hasChild(dOut) && dataSnapshot.hasChild(rOut)) {
                     if(dataSnapshot.child(dTime).hasChildren() && dataSnapshot.child(rTime).hasChildren() && dataSnapshot.child(dOut).hasChildren() && dataSnapshot.child(rOut).hasChildren()) {
+
                         List<TrialData> rampList = new ArrayList<TrialData>();
-                        List<TrialData> driveList = new ArrayList<TrialData>();
-                        //arrayPosition = dataSnapshot.child(timeTypeString).getChildrenCount(); //TODO: Move this to where it will properly trigger for correct data type
 
                         //Fills ramp list.
                         for(int trialNum = 0; trialNum < dataSnapshot.child(rTime).getChildrenCount(); trialNum++) {
@@ -130,6 +127,8 @@ public class TimerActivity extends AppCompatActivity {
                             rampList.add(data);
 
                         }
+
+                        List<TrialData> driveList = new ArrayList<TrialData>();
 
                         //Fills drive list.
                         for(int trialNum = 0; trialNum < dataSnapshot.child(dTime).getChildrenCount(); trialNum++) {
@@ -232,8 +231,9 @@ public class TimerActivity extends AppCompatActivity {
 
                             //TODO: Write to firebase as an array (possibly use time in addition for ordering? - would need to get checked by Sam)
                             //TODO: Make sure that arrayPosition is updated to ramp or drive before writing (doesn't currently)
-                            myRef.child("pit" + (isRamp ? "Ramp" : "Drive") + "Time").child("" + arrayPosition).setValue(deciTime);
-                            myRef.child("pit" + (isRamp ? "Ramp" : "Drive") + "TimeOutcome").child("" + arrayPosition).setValue(outcome);
+                            String typeString = isRamp ? "Ramp" : "Drive";
+                            myRef.child("pit" + typeString + "Time").child("" + trialCountMap.get(typeString)).setValue(deciTime);
+                            myRef.child("pit" + typeString + "TimeOutcome").child("" + trialCountMap.get(typeString)).setValue(outcome);
 
                             time = 0;
                             timerView.setText("00:00.00");
