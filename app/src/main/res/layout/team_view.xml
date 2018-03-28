@@ -7,7 +7,7 @@
         android:id="@+id/teamNameAndNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="1678- Citrus Circuits"
+        android:text="1678 - Citrus Circuits"
         android:textSize="25dp"
         android:paddingLeft="3dp"
         />
@@ -22,6 +22,7 @@
         android:layout_marginTop="100dp"
         android:text="TIMER"
         android:paddingLeft="3dp"
+        android:onClick="openTimer"
         />
 
     <TextView
