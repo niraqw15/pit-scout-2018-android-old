@@ -101,6 +101,10 @@ public class TimerActivity extends AppCompatActivity {
         trialListMap.put("Ramp", new ArrayList<TrialData>());
         trialListMap.put("Drive", new ArrayList<TrialData>());
 
+        trialCountMap = new HashMap<>();
+        trialCountMap.put("Ramp", Long.valueOf(0));
+        trialCountMap.put("Drive", Long.valueOf(0));
+
         timerAdapter = new BaseAdapter() {
             @Override
             public int getCount() {
