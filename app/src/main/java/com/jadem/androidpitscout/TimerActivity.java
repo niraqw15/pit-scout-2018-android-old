@@ -67,7 +67,7 @@ public class TimerActivity extends AppCompatActivity {
         timerRunning = false;
 
         database = FirebaseDatabase.getInstance();
-        myRef = database.getReference().child("Teams").child("" + teamNumber); //TODO: Receive team number before doing this!
+        myRef = database.getReference().child("Teams").child("" + teamNumber);
 
         timerView = (CustomChronometer) findViewById(R.id.timerView);
         timerView.setText("00:00.00");
@@ -156,8 +156,6 @@ public class TimerActivity extends AppCompatActivity {
         trialEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                //TODO: Complete this (needs to update data and ListView)
-
                 //TODO: Should these be final?
                 String dTime = "pitDriveTime";
                 String rTime = "pitRampTime";
@@ -299,8 +297,6 @@ public class TimerActivity extends AppCompatActivity {
                             double ratio = 7.4; //This is the treadmill ratio. //TODO: Make this variable
                             boolean outcome = distance > (ratio - length);
 
-                            //TODO: Write to firebase as an array (possibly use time in addition for ordering? - would need to get checked by Sam)
-                            //TODO: Make sure that arrayPosition is updated to ramp or drive before writing (doesn't currently)
                             String typeString = isRamp ? "Ramp" : "Drive";
                             myRef.child("pit" + typeString + "Time").child("" + trialCountMap.get(typeString)).setValue(deciTime);
                             myRef.child("pit" + typeString + "TimeOutcome").child("" + trialCountMap.get(typeString)).setValue(outcome);
