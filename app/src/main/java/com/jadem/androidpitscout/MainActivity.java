@@ -38,13 +38,15 @@ public class MainActivity extends AppCompatActivity {
         ref = dataBase.getReference();
         context = this;
 
-
+        searchBar = (EditText) findViewById(R.id.searchEditText);
         tempButton = (Button) findViewById(R.id.temporaryButton);
 
         tempButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, ViewTeam.class));
+                Intent intent = new Intent(MainActivity.this, ViewTeam.class);
+                intent.putExtra("teamNumber", searchBar.getText()); //TODO: Temporary for testing. Remove when ListView is finished
+                startActivity(intent);
             }
         });
 
@@ -56,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
       public void getTeams(View view) {
-        searchBar = (EditText) findViewById(R.id.searchEditText);
         searchBar.setFocusable(false);
         updateListView();
         searchBar.setFocusableInTouchMode(true);

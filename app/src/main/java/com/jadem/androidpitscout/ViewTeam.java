@@ -18,6 +18,7 @@ import com.google.firebase.database.DatabaseReference;
 
 public class ViewTeam extends AppCompatActivity {
 
+    int teamNumber;
     EditText SEALsNotesEditText;
     Button TimerButton;
     TextView TeamName;
@@ -34,6 +35,7 @@ public class ViewTeam extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         context = this;
+        getExtras();
 
         SEALsNotesEditText = (EditText) findViewById(R.id.SEALsNotesEditText);
         SEALsNotesTextView = (TextView) findViewById(R.id.SEALsNotesTextView);
@@ -45,8 +47,12 @@ public class ViewTeam extends AppCompatActivity {
 
     public void openTimer(View view) {
         Intent intent = new Intent(context, TimerActivity.class);
-        int teamNumber = 1; //TODO: Temp
         intent.putExtra("teamNumber", teamNumber);
         startActivity(intent);
+    }
+
+    private void getExtras() {
+        Intent previous = getIntent();
+        teamNumber = previous.getIntExtra("teamNumber", 0);
     }
 }
