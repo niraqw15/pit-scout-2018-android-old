@@ -29,6 +29,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,7 +49,7 @@ public class TimerActivity extends AppCompatActivity {
     private DatabaseReference myRef;
     private BaseAdapter trialAdapter;
     private Map<String, List<TrialData>> trialListMap;
-    //private List<TrialData> trialList; //TODO: Remove this.
+    private Map<String, Long> trialCountMap;
     private ValueEventListener trialEventListener;
     private long time = 0;
 
@@ -150,8 +151,13 @@ public class TimerActivity extends AppCompatActivity {
 
                         }
 
+                        trialListMap = new HashMap<>();
                         trialListMap.put("Ramp", rampList);
                         trialListMap.put("Drive", driveList);
+
+                        trialCountMap = new HashMap<>();
+                        trialCountMap.put("Ramp", dataSnapshot.child(rTime).getChildrenCount());
+                        trialCountMap.put("Drive", dataSnapshot.child(dTime).getChildrenCount());
                     }
                 }
             }
