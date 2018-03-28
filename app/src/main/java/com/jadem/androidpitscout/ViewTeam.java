@@ -20,8 +20,8 @@ public class ViewTeam extends AppCompatActivity {
 
     int teamNumber;
     EditText SEALsNotesEditText;
-    Button TimerButton;
-    TextView TeamName;
+    Button timerButton;
+    TextView teamName;
     TextView SEALsNotesTextView;
     Context context;
 
@@ -39,8 +39,8 @@ public class ViewTeam extends AppCompatActivity {
 
         SEALsNotesEditText = (EditText) findViewById(R.id.SEALsNotesEditText);
         SEALsNotesTextView = (TextView) findViewById(R.id.SEALsNotesTextView);
-        TimerButton = (Button) findViewById(R.id.timer);
-        TeamName = (TextView) findViewById(R.id.teamNameAndNumber);
+        timerButton = (Button) findViewById(R.id.timer);
+        teamName = (TextView) findViewById(R.id.teamNameAndNumber);
 
         SEALsNotesEditText.setFocusable(true);
     }
