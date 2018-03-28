@@ -6,10 +6,10 @@ package com.jadem.androidpitscout;
 
 public class TrialData {
 
-    private float time;
+    private double time;
     private boolean outcome;
 
-    public TrialData(float time, boolean outcome) {
+    public TrialData(double time, boolean outcome) {
         this.time = time;
         this.outcome = outcome;
     }
@@ -19,7 +19,7 @@ public class TrialData {
         outcome = newOutcome;
     }
 
-    public float getTime() {
+    public double getTime() {
         return  time;
     }
 
