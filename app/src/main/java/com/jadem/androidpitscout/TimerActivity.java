@@ -241,6 +241,14 @@ public class TimerActivity extends AppCompatActivity {
             timerView.stop();
             timerRunning = false;
             toggleButton.setText("Start");
+            int h = (int)(time /3600000);
+            int m = (int)(time - h*3600000)/60000;
+            int s= (int)(time - h*3600000 - m*60000)/1000 ;
+            int ms = (int)(time - h*3600000 - m*60000 - s*1000)/10;
+            String mm = m < 10 ? "0"+m: m+"";
+            String ss = s < 10 ? "0"+s: s+"";
+            String msms = ms < 10 ? "0"+ms: ms+"";
+            timerView.setText(mm+":"+ss+"."+msms);
         } else {
             //Turns timer on.
             time = 0;
@@ -285,7 +293,7 @@ public class TimerActivity extends AppCompatActivity {
                                 //TODO: Re-open dialog with data
                             }
 
-                            float deciTime = time;
+                            double deciTime = time;
                             deciTime = deciTime / 1000; //Stores time in seconds.
 
                             double ratio = 7.4; //This is the treadmill ratio. //TODO: Make this variable
