@@ -24,7 +24,6 @@ public class MainActivity extends AppCompatActivity {
     Context context;
     Button tempButton;
     EditText searchBar;
-    BaseAdapter adapter;
     ListView listView;
     public static FirebaseDatabase dataBase;
     public static DatabaseReference ref;
@@ -49,9 +48,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+        searchAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         listView = (ListView) findViewById(R.id.timesList);
-        listView.setAdapter(adapter);
+        listView.setAdapter(searchAdapter);
         updateListView();
 
     }

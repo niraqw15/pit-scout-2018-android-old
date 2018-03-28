@@ -1,8 +1,11 @@
 package com.jadem.androidpitscout;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -19,6 +22,7 @@ public class ViewTeam extends AppCompatActivity {
     Button TimerButton;
     TextView TeamName;
     TextView SEALsNotesTextView;
+    Context context;
 
     DatabaseReference dataBase;
 
@@ -28,6 +32,8 @@ public class ViewTeam extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.team_view);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        context = this;
 
         SEALsNotesEditText = (EditText) findViewById(R.id.SEALsNotesEditText);
         SEALsNotesTextView = (TextView) findViewById(R.id.SEALsNotesTextView);
@@ -39,13 +45,14 @@ public class ViewTeam extends AppCompatActivity {
 
 
         //TODO: When the TimerActivity is added, uncomment
-        /*TimerButton.setOnClickListener(new View.OnClickListener() {
+        TimerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ViewTeam.this, TimerActivity.class));
+                Intent intent = new Intent(context, TimerActivity.class);
+                int teamNumber = 1; //TODO: Temp
+                intent.putExtra("teamNumber", teamNumber);
+                startActivity(intent);
             }
         });
-    }*/
     }
-
 }
