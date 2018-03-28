@@ -161,63 +161,62 @@ public class TimerActivity extends AppCompatActivity {
                 String rTime = "pitRampTime";
                 String dOut = "pitDriveTimeOutcome";
                 String rOut = "pitRampTimeOutcome";
-                if(dataSnapshot.hasChild(dTime) && dataSnapshot.hasChild(rTime) && dataSnapshot.hasChild(dOut) && dataSnapshot.hasChild(rOut)) {
-                    if(dataSnapshot.child(dTime).hasChildren() && dataSnapshot.child(rTime).hasChildren() && dataSnapshot.child(dOut).hasChildren() && dataSnapshot.child(rOut).hasChildren()) {
 
-                        List<TrialData> rampList = new ArrayList<TrialData>();
+                if((dataSnapshot.hasChild(dTime) && dataSnapshot.hasChild(dOut)) || (dataSnapshot.hasChild(rTime) && dataSnapshot.hasChild(rOut))) {
 
-                        //Fills ramp list.
-                        for(int trialNum = 0; trialNum < dataSnapshot.child(rTime).getChildrenCount(); trialNum++) {
+                    List<TrialData> rampList = new ArrayList<TrialData>();
 
-                            double time = 0;
-                            boolean outcome = false;
-                            if(dataSnapshot.child(rTime).hasChild("" + trialNum) && dataSnapshot.child(rOut).hasChild("" + trialNum)) {
-                                try {
-                                    time = (Double) dataSnapshot.child(rTime).child("" + trialNum).getValue();
-                                    outcome = (Boolean) dataSnapshot.child(rOut).child("" + trialNum).getValue();
-                                } catch (NullPointerException npe) {
-                                    Log.e("(NullPointerException", "Incorrect data type for team: " + teamNumber + ", trial: " + trialNum + ", type: ramp");
-                                }
+                    //Fills ramp list.
+                    for(int trialNum = 0; trialNum < dataSnapshot.child(rTime).getChildrenCount(); trialNum++) {
+
+                        double time = 0;
+                        boolean outcome = false;
+                        if(dataSnapshot.child(rTime).hasChild("" + trialNum) && dataSnapshot.child(rOut).hasChild("" + trialNum)) {
+                            try {
+                                time = (Double) dataSnapshot.child(rTime).child("" + trialNum).getValue();
+                                outcome = (Boolean) dataSnapshot.child(rOut).child("" + trialNum).getValue();
+                            } catch (NullPointerException npe) {
+                                Log.e("(NullPointerException", "Incorrect data type for team: " + teamNumber + ", trial: " + trialNum + ", type: ramp");
                             }
-
-                            //If time == 0, the data for that trial is invalid.
-                            TrialData data = new TrialData(time, outcome);
-                            rampList.add(data);
-
                         }
 
-                        List<TrialData> driveList = new ArrayList<TrialData>();
+                        //If time == 0, the data for that trial is invalid.
+                        TrialData data = new TrialData(time, outcome);
+                        rampList.add(data);
 
-                        //Fills drive list.
-                        for(int trialNum = 0; trialNum < dataSnapshot.child(dTime).getChildrenCount(); trialNum++) {
-
-                            double time = 0;
-                            boolean outcome = false;
-                            if(dataSnapshot.child(dTime).hasChild("" + trialNum) && dataSnapshot.child(dOut).hasChild("" + trialNum)) {
-                                try {
-                                    time = (Double) dataSnapshot.child(dTime).child("" + trialNum).getValue();
-                                    outcome = (Boolean) dataSnapshot.child(dOut).child("" + trialNum).getValue();
-                                } catch (NullPointerException npe) {
-                                    Log.e("(NullPointerException", "Incorrect data type for team: " + teamNumber + ", trial: " + trialNum + ", type: drive");
-                                }
-                            }
-
-                            //If time == 0, the data for that trial is invalid.
-                            TrialData data = new TrialData(time, outcome);
-                            driveList.add(data);
-
-                        }
-
-                        trialListMap = new HashMap<>();
-                        trialListMap.put("Ramp", rampList);
-                        trialListMap.put("Drive", driveList);
-
-                        trialCountMap = new HashMap<>();
-                        trialCountMap.put("Ramp", dataSnapshot.child(rTime).getChildrenCount());
-                        trialCountMap.put("Drive", dataSnapshot.child(dTime).getChildrenCount());
-
-                        timerAdapter.notifyDataSetChanged();
                     }
+
+                    List<TrialData> driveList = new ArrayList<TrialData>();
+
+                    //Fills drive list.
+                    for(int trialNum = 0; trialNum < dataSnapshot.child(dTime).getChildrenCount(); trialNum++) {
+
+                        double time = 0;
+                        boolean outcome = false;
+                        if(dataSnapshot.child(dTime).hasChild("" + trialNum) && dataSnapshot.child(dOut).hasChild("" + trialNum)) {
+                            try {
+                                time = (Double) dataSnapshot.child(dTime).child("" + trialNum).getValue();
+                                outcome = (Boolean) dataSnapshot.child(dOut).child("" + trialNum).getValue();
+                            } catch (NullPointerException npe) {
+                                Log.e("(NullPointerException", "Incorrect data type for team: " + teamNumber + ", trial: " + trialNum + ", type: drive");
+                            }
+                        }
+
+                        //If time == 0, the data for that trial is invalid.
+                        TrialData data = new TrialData(time, outcome);
+                        driveList.add(data);
+
+                    }
+
+                    trialListMap = new HashMap<>();
+                    trialListMap.put("Ramp", rampList);
+                    trialListMap.put("Drive", driveList);
+
+                    trialCountMap = new HashMap<>();
+                    trialCountMap.put("Ramp", dataSnapshot.child(rTime).getChildrenCount());
+                    trialCountMap.put("Drive", dataSnapshot.child(dTime).getChildrenCount());
+
+                    timerAdapter.notifyDataSetChanged();
                 }
             }
 
