@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.Chronometer;
@@ -51,6 +52,7 @@ public class TimerActivity extends AppCompatActivity {
     private Map<String, Long> trialCountMap;
     private ValueEventListener trialEventListener;
     private long time = 0;
+    private BaseAdapter timerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +94,53 @@ public class TimerActivity extends AppCompatActivity {
                 //TODO: Change what the listview displays (and update it?)
             }
         });
+
+        //TODO: Make and set adapter
+        timerAdapter = new BaseAdapter() {
+            @Override
+            public int getCount() {
+                return trialListMap.get(isRamp ? "Ramp" : "Drive").size();
+            }
+
+            //TODO: Possibly make these methods actually do something.
+            @Override
+            public Object getItem(int i) {
+                return null;
+            }
+
+            @Override
+            public long getItemId(int i) {
+                return 0;
+            }
+
+            @Override //Partially modelled after http://stackoverflow.com/questions/35761897/how-do-i-make-a-relative-layout-an-item-of-my-listview-and-detect-gestures-over
+            public View getView(int position, View convertView, ViewGroup parent) {
+                LayoutInflater layoutInflater;
+                ViewHolder listViewHolder;
+
+                if(convertView == null){
+                    layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    convertView = layoutInflater.inflate(R.layout.layout_timer_list_item, parent, false);
+
+                    listViewHolder = new ViewHolder();
+                    listViewHolder.trialView = (TextView) convertView.findViewById(R.id.trialView);
+                    listViewHolder.timeView = (TextView) convertView.findViewById(R.id.timeView);
+                    listViewHolder.outcomeView = (TextView) convertView.findViewById(R.id.outcomeView);
+                    convertView.setTag(listViewHolder);
+                } else {
+                    listViewHolder = (ViewHolder) convertView.getTag();
+                }
+
+                String posString = "" + position + 1; //TODO: Check that this gives the correct trial number
+                listViewHolder.trialView.setText(posString);
+                String timeString = trialListMap.get(isRamp ? "Ramp" : "Drive").get(position).getTimeString();
+                listViewHolder.timeView.setText(timeString);
+                String outcomeString = trialListMap.get(isRamp ? "Ramp" : "Drive").get(position).getOutcomeString();
+                listViewHolder.outcomeView.setText(outcomeString);
+
+                return convertView;
+            }
+        };
 
         trialEventListener = new ValueEventListener() {
             @Override
@@ -157,6 +206,8 @@ public class TimerActivity extends AppCompatActivity {
                         trialCountMap = new HashMap<>();
                         trialCountMap.put("Ramp", dataSnapshot.child(rTime).getChildrenCount());
                         trialCountMap.put("Drive", dataSnapshot.child(dTime).getChildrenCount());
+
+                        //TODO: Notify adapter of change
                     }
                 }
             }
@@ -226,7 +277,7 @@ public class TimerActivity extends AppCompatActivity {
                             float deciTime = time;
                             deciTime = deciTime / 1000; //Stores time in seconds.
 
-                            double ratio = 7.4; //This is the treadmill ratio.
+                            double ratio = 7.4; //This is the treadmill ratio. //TODO: Make this variable
                             boolean outcome = distance > (ratio - length);
 
                             //TODO: Write to firebase as an array (possibly use time in addition for ordering? - would need to get checked by Sam)
@@ -259,4 +310,11 @@ public class TimerActivity extends AppCompatActivity {
         timerRunning = false;
     }
 
+}
+
+//For temporarily holding values of each chat box.
+class ViewHolder {
+    TextView trialView;
+    TextView timeView;
+    TextView outcomeView;
 }
