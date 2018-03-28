@@ -30,6 +30,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by niraq on 3/15/2018.
@@ -46,7 +47,8 @@ public class TimerActivity extends AppCompatActivity {
     private FirebaseDatabase database;
     private DatabaseReference myRef;
     private BaseAdapter trialAdapter;
-    private List<TrialData> trialList;
+    private Map<String, List<TrialData>> trialListMap;
+    //private List<TrialData> trialList; //TODO: Remove this.
     private ValueEventListener trialEventListener;
     private long time = 0;
 
@@ -95,30 +97,61 @@ public class TimerActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 //TODO: Complete this (needs to update data and ListView)
-                //TODO: Trigger this when isRamp is changed
-                String timeTypeString = "pit" + (isRamp ? "Ramp" : "Drive") + "Time";
-                if(dataSnapshot.hasChild(timeTypeString)) {
-                    if (dataSnapshot.child(timeTypeString).hasChildren()) {
-                        trialList = new ArrayList<TrialData>();
-                        arrayPosition = dataSnapshot.child(timeTypeString).getChildrenCount();
-                        for(int trialNum = 0; trialNum < dataSnapshot.child(timeTypeString).getChildrenCount(); trialNum++) {
+                //TODO: -Trigger this when isRamp is changed- Instead, just have this read anything it will ever nead (read both ramp and drive data)
+
+                //TODO: Should these be final?
+                String dTime = "pitDriveTime";
+                String rTime = "pitRampTime";
+                String dOut = "pitDriveTimeOutcome";
+                String rOut = "pitRampTimeOutcome";
+                if(dataSnapshot.hasChild(dTime) && dataSnapshot.hasChild(rTime) && dataSnapshot.hasChild(dOut) && dataSnapshot.hasChild(rOut)) {
+                    if(dataSnapshot.child(dTime).hasChildren() && dataSnapshot.child(rTime).hasChildren() && dataSnapshot.child(dOut).hasChildren() && dataSnapshot.child(rOut).hasChildren()) {
+                        List<TrialData> rampList = new ArrayList<TrialData>();
+                        List<TrialData> driveList = new ArrayList<TrialData>();
+                        //arrayPosition = dataSnapshot.child(timeTypeString).getChildrenCount(); //TODO: Move this to where it will properly trigger for correct data type
+
+                        //Fills ramp list.
+                        for(int trialNum = 0; trialNum < dataSnapshot.child(rTime).getChildrenCount(); trialNum++) {
 
                             float time = 0;
                             boolean outcome = false;
-                            if(dataSnapshot.child(timeTypeString).hasChild("" + trialNum) && dataSnapshot.child(timeTypeString + "Outcome").hasChild("" + trialNum)) {
+                            if(dataSnapshot.child(rTime).hasChild("" + trialNum) && dataSnapshot.child(rOut).hasChild("" + trialNum)) {
                                 try {
-                                    time = (Float) dataSnapshot.child(timeTypeString).child("" + trialNum).getValue();
-                                    outcome = (Boolean) dataSnapshot.child(timeTypeString + "Outcome").child("" + trialNum).getValue();
+                                    time = (Float) dataSnapshot.child(rTime).child("" + trialNum).getValue();
+                                    outcome = (Boolean) dataSnapshot.child(rOut).child("" + trialNum).getValue();
                                 } catch (NullPointerException npe) {
-                                    Log.e("(NullPointerException", "Incorrect data type for team " + teamNumber + ", trial " + trialNum + ": " + (isRamp ? "Ramp" : "Drive"));
+                                    Log.e("(NullPointerException", "Incorrect data type for team: " + teamNumber + ", trial: " + trialNum + ", type: ramp");
                                 }
                             }
 
                             //If time == 0, the data for that trial is invalid.
                             TrialData data = new TrialData(time, outcome);
-                            trialList.add(data);
+                            rampList.add(data);
 
                         }
+
+                        //Fills drive list.
+                        for(int trialNum = 0; trialNum < dataSnapshot.child(dTime).getChildrenCount(); trialNum++) {
+
+                            float time = 0;
+                            boolean outcome = false;
+                            if(dataSnapshot.child(dTime).hasChild("" + trialNum) && dataSnapshot.child(dOut).hasChild("" + trialNum)) {
+                                try {
+                                    time = (Float) dataSnapshot.child(dTime).child("" + trialNum).getValue();
+                                    outcome = (Boolean) dataSnapshot.child(dOut).child("" + trialNum).getValue();
+                                } catch (NullPointerException npe) {
+                                    Log.e("(NullPointerException", "Incorrect data type for team: " + teamNumber + ", trial: " + trialNum + ", type: drive");
+                                }
+                            }
+
+                            //If time == 0, the data for that trial is invalid.
+                            TrialData data = new TrialData(time, outcome);
+                            driveList.add(data);
+
+                        }
+
+                        trialListMap.put("Ramp", rampList);
+                        trialListMap.put("Drive", driveList);
                     }
                 }
             }
