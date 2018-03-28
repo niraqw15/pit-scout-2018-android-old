@@ -18,6 +18,7 @@ import android.widget.Chronometer;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -45,9 +46,9 @@ public class TimerActivity extends AppCompatActivity {
     private Button toggleButton;
     private CustomChronometer timerView;
     private Switch timerTypeSwitch;
+    private ListView timerListView;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
-    private BaseAdapter trialAdapter;
     private Map<String, List<TrialData>> trialListMap;
     private Map<String, Long> trialCountMap;
     private ValueEventListener trialEventListener;
@@ -95,7 +96,6 @@ public class TimerActivity extends AppCompatActivity {
             }
         });
 
-        //TODO: Make and set adapter
         timerAdapter = new BaseAdapter() {
             @Override
             public int getCount() {
@@ -141,6 +141,8 @@ public class TimerActivity extends AppCompatActivity {
                 return convertView;
             }
         };
+        timerListView = (ListView) findViewById(R.id.timesList);
+        timerListView.setAdapter(timerAdapter);
 
         trialEventListener = new ValueEventListener() {
             @Override
@@ -207,7 +209,7 @@ public class TimerActivity extends AppCompatActivity {
                         trialCountMap.put("Ramp", dataSnapshot.child(rTime).getChildrenCount());
                         trialCountMap.put("Drive", dataSnapshot.child(dTime).getChildrenCount());
 
-                        //TODO: Notify adapter of change
+                        timerAdapter.notifyDataSetChanged();
                     }
                 }
             }
