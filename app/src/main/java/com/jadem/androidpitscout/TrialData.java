@@ -28,7 +28,7 @@ public class TrialData {
     }
 
     public String getTimeString() {
-        //TODO: make sure this is a properly formatted string
+        //TODO: make sure this is a properly formatted string (it currently turns to 00:00.00)
         int h = (int)(time /3600000);
         int m = (int)(time - h*3600000)/60000;
         int s= (int)(time - h*3600000 - m*60000)/1000 ;

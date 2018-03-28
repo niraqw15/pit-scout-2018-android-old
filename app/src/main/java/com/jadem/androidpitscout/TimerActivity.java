@@ -92,7 +92,7 @@ public class TimerActivity extends AppCompatActivity {
         timerTypeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 isRamp = isChecked;
-                //TODO: Change what the listview displays (and update it?)
+                timerAdapter.notifyDataSetChanged();
             }
         });
 
@@ -105,7 +105,6 @@ public class TimerActivity extends AppCompatActivity {
         trialCountMap.put("Ramp", Long.valueOf(0));
         trialCountMap.put("Drive", Long.valueOf(0));
 
-        //TODO: Error: When switch is set to what listView is not displaying, tapping a list listitem will crash app.
         timerAdapter = new BaseAdapter() {
             @Override
             public int getCount() {
