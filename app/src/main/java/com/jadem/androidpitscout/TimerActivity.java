@@ -15,10 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.Chronometer;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -261,101 +259,177 @@ public class TimerActivity extends AppCompatActivity {
         if(!timerRunning && time != 0) {
             isRamp = timerTypeSwitch.isChecked();
 
-            //TODO: Should these be final?
-            LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            final RelativeLayout confirmDialog = (RelativeLayout) layoutInflater.inflate(R.layout.confirm_dialog, null);
-            final TextView questionView = (TextView)confirmDialog.findViewById(R.id.questionView);
-            final EditText distanceEditText = (EditText)confirmDialog.findViewById(R.id.distanceView);
-            final EditText lengthEditText = (EditText)confirmDialog.findViewById(R.id.lengthView);
-            final RadioGroup ratioRadioGroup = (RadioGroup)confirmDialog.findViewById(R.id.radioGroup);
+            if(isRamp) {
+
+                //TODO: Should these be final?
+                LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                final RelativeLayout confirmDialog = (RelativeLayout) layoutInflater.inflate(R.layout.ramp_confirm_dialog, null);
+                final TextView questionView = (TextView)confirmDialog.findViewById(R.id.questionView);
+                final RadioGroup ratioRadioGroup = (RadioGroup)confirmDialog.findViewById(R.id.radioGroup);
+
+                String question = "Was the robot successful?";
+                questionView.setText(question);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setView(confirmDialog)
+                        .setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
 
 
-            String question = "What was the " + (isRamp ? "ramp " : "drive ") + "distance travelled?";
-            questionView.setText(question);
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                final AlertDialog dialog = builder.create();
+                dialog.show();
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setView(confirmDialog)
-                    .setPositiveButton("Submit", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-
-
-                        }
-                    })
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    });
-            final AlertDialog dialog = builder.create();
-            dialog.show();
-
-            //Changes the onClick of the positive button (Submit) so that the dialog doesn't close if data is incorrect.
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
+                //Changes the onClick of the positive button (Submit) so that the dialog doesn't close if data is incorrect.
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
                 {
-                    Boolean canContinue = false;
+                    @Override
+                    public void onClick(View v)
+                    {
+                        Boolean canContinue = false;
 
-                    String distanceString = distanceEditText.getText().toString();
-                    String lengthString = lengthEditText.getText().toString();
+                        boolean success = false;
+                        switch(ratioRadioGroup.getCheckedRadioButtonId()) {
+                            case R.id.yesButton:
+                                success = true;
+                                canContinue = true;
+                                break;
+                            case R.id.noButton:
+                                success = false;
+                                canContinue = true;
+                                break;
+                            case -1: //This case occurs when no button is selected.
+                                Toast radioToast = Toast.makeText(getApplicationContext(), "Please state if the robot was successful", Toast.LENGTH_SHORT);
+                                radioToast.setGravity(Gravity.CENTER, 0, 0);
+                                radioToast.show();
+                                canContinue = false;
+                                break;
+                        }
 
-                    float distance = 0, length = 0;
-                    try {
-                        distance = Float.parseFloat(distanceString);
-                        length = Float.parseFloat(lengthString);
-                        canContinue = true;
-                    } catch (NumberFormatException e) {
-                        Toast decimalToast = Toast.makeText(getApplicationContext(), "Invalid numbers (check for extra decimals)", Toast.LENGTH_SHORT);
-                        decimalToast.setGravity(Gravity.CENTER, 0, 0);
-                        decimalToast.show();
-                        canContinue = false;
-                        return;
+                        if(canContinue) {
+                            double deciTime = time;
+                            deciTime = deciTime / 1000; //Stores time in seconds.
+
+                            String typeString = isRamp ? "Ramp" : "Drive";
+                            myRef.child("pit" + typeString + "Time").child("" + trialCountMap.get(typeString)).setValue(deciTime);
+                            myRef.child("pit" + typeString + "TimeOutcome").child("" + trialCountMap.get(typeString)).setValue(success);
+
+                            time = 0;
+                            timerView.setText("00:00.00");
+
+                            Toast successToast = Toast.makeText(getApplicationContext(), "Sent!", Toast.LENGTH_SHORT);
+                            successToast.setGravity(Gravity.CENTER, 0, 0);
+                            successToast.show();
+
+                            dialog.dismiss();
+                        }
                     }
+                });
+            } else {
 
-                    double ratio = 1; //Default treadmill ratio.
-                    switch(ratioRadioGroup.getCheckedRadioButtonId()) {
-                        case R.id.slowButton:
-                            ratio = 0.8;
+                //TODO: Should these be final?
+                LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                final RelativeLayout confirmDialog = (RelativeLayout) layoutInflater.inflate(R.layout.drive_confirm_dialog, null);
+                final TextView questionView = (TextView)confirmDialog.findViewById(R.id.questionView);
+                final EditText distanceEditText = (EditText)confirmDialog.findViewById(R.id.distanceView);
+                final EditText lengthEditText = (EditText)confirmDialog.findViewById(R.id.lengthView);
+                final RadioGroup ratioRadioGroup = (RadioGroup)confirmDialog.findViewById(R.id.radioGroup);
+
+
+                String question = "What was the distance travelled?";
+                questionView.setText(question);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setView(confirmDialog)
+                        .setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+
+
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                final AlertDialog dialog = builder.create();
+                dialog.show();
+
+                //Changes the onClick of the positive button (Submit) so that the dialog doesn't close if data is incorrect.
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        Boolean canContinue = false;
+
+                        String distanceString = distanceEditText.getText().toString();
+                        String lengthString = lengthEditText.getText().toString();
+
+                        float distance = 0, length = 0;
+                        try {
+                            distance = Float.parseFloat(distanceString);
+                            length = Float.parseFloat(lengthString);
                             canContinue = true;
-                            break;
-                        case R.id.mediumButton:
-                            ratio = 1.0;
-                            canContinue = true;
-                            break;
-                        case R.id.fastButton:
-                            ratio = 1.2;
-                            canContinue = true;
-                            break;
-                        case -1: //This case occurs when no button is selected.
-                            Toast radioToast = Toast.makeText(getApplicationContext(), "Please select a ratio", Toast.LENGTH_SHORT);
-                            radioToast.setGravity(Gravity.CENTER, 0, 0);
-                            radioToast.show();
+                        } catch (NumberFormatException e) {
+                            Toast decimalToast = Toast.makeText(getApplicationContext(), "Invalid numbers (check for extra decimals)", Toast.LENGTH_SHORT);
+                            decimalToast.setGravity(Gravity.CENTER, 0, 0);
+                            decimalToast.show();
                             canContinue = false;
-                            break;
+                            return;
+                        }
+
+                        double ratio = 1; //Default treadmill ratio.
+                        switch(ratioRadioGroup.getCheckedRadioButtonId()) {
+                            case R.id.slowButton:
+                                ratio = 0.8;
+                                canContinue = true;
+                                break;
+                            case R.id.mediumButton:
+                                ratio = 1.0;
+                                canContinue = true;
+                                break;
+                            case R.id.fastButton:
+                                ratio = 1.2;
+                                canContinue = true;
+                                break;
+                            case -1: //This case occurs when no button is selected.
+                                Toast radioToast = Toast.makeText(getApplicationContext(), "Please select a ratio", Toast.LENGTH_SHORT);
+                                radioToast.setGravity(Gravity.CENTER, 0, 0);
+                                radioToast.show();
+                                canContinue = false;
+                                break;
+                        }
+
+                        if(canContinue) {
+                            double deciTime = time;
+                            deciTime = deciTime / 1000; //Stores time in seconds.
+
+                            //TODO: Use something else for ramp.
+                            boolean outcome = (distance * ratio) > (10 - length);
+
+                            String typeString = isRamp ? "Ramp" : "Drive";
+                            myRef.child("pit" + typeString + "Time").child("" + trialCountMap.get(typeString)).setValue(deciTime);
+                            myRef.child("pit" + typeString + "TimeOutcome").child("" + trialCountMap.get(typeString)).setValue(outcome);
+
+                            time = 0;
+                            timerView.setText("00:00.00");
+
+                            Toast successToast = Toast.makeText(getApplicationContext(), "Sent!", Toast.LENGTH_SHORT);
+                            successToast.setGravity(Gravity.CENTER, 0, 0);
+                            successToast.show();
+
+                            dialog.dismiss();
+                        }
                     }
-
-                    if(canContinue) {
-                        double deciTime = time;
-                        deciTime = deciTime / 1000; //Stores time in seconds.
-
-                        boolean outcome = (distance * ratio) > (10 - length);
-
-                        String typeString = isRamp ? "Ramp" : "Drive";
-                        myRef.child("pit" + typeString + "Time").child("" + trialCountMap.get(typeString)).setValue(deciTime);
-                        myRef.child("pit" + typeString + "TimeOutcome").child("" + trialCountMap.get(typeString)).setValue(outcome);
-
-                        time = 0;
-                        timerView.setText("00:00.00");
-
-                        Toast successToast = Toast.makeText(getApplicationContext(), "Sent!", Toast.LENGTH_SHORT);
-                        successToast.setGravity(Gravity.CENTER, 0, 0);
-                        successToast.show();
-
-                        dialog.dismiss();
-                    }
-                }
-            });
+                });
+            }
         }
     }
 
