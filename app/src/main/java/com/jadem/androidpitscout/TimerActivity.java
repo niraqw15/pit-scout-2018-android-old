@@ -76,7 +76,7 @@ public class TimerActivity extends AppCompatActivity {
                 long time = SystemClock.elapsedRealtime() - cArg.getBase();
                 int h = (int)(time /3600000);
                 int m = (int)(time - h*3600000)/60000;
-                int s= (int)(time - h*3600000 - m*60000)/1000 ;
+                int s = (int)(time - h*3600000 - m*60000)/1000 ;
                 int ms = (int)(time - h*3600000 - m*60000 - s*1000)/10;
                 String mm = m < 10 ? "0"+m: m+"";
                 String ss = s < 10 ? "0"+s: s+"";
@@ -124,19 +124,19 @@ public class TimerActivity extends AppCompatActivity {
             @Override //Partially modelled after http://stackoverflow.com/questions/35761897/how-do-i-make-a-relative-layout-an-item-of-my-listview-and-detect-gestures-over
             public View getView(int position, View convertView, ViewGroup parent) {
                 LayoutInflater layoutInflater;
-                ViewHolder listViewHolder;
+                TimerViewHolder listViewHolder;
 
                 if(convertView == null){
                     layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     convertView = layoutInflater.inflate(R.layout.layout_timer_list_item, parent, false);
 
-                    listViewHolder = new ViewHolder();
+                    listViewHolder = new TimerViewHolder();
                     listViewHolder.trialView = (TextView) convertView.findViewById(R.id.trialView);
                     listViewHolder.timeView = (TextView) convertView.findViewById(R.id.timeView);
                     listViewHolder.outcomeView = (TextView) convertView.findViewById(R.id.outcomeView);
                     convertView.setTag(listViewHolder);
                 } else {
-                    listViewHolder = (ViewHolder) convertView.getTag();
+                    listViewHolder = (TimerViewHolder) convertView.getTag();
                 }
 
                 String posString = "" + (position + 1);
@@ -438,6 +438,7 @@ public class TimerActivity extends AppCompatActivity {
         time = 0;
         timerView.setText("00:00.00");
         timerRunning = false;
+        toggleButton.setText("START");
     }
 
     private void getExtras() {
@@ -447,9 +448,10 @@ public class TimerActivity extends AppCompatActivity {
 
 }
 
-//For temporarily holding values of each chat box.
-class ViewHolder {
+//For temporarily holding values of each item.
+class TimerViewHolder {
     TextView trialView;
     TextView timeView;
     TextView outcomeView;
 }
+

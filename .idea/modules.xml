@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/android-pit-scout-2018.iml" filepath="$PROJECT_DIR$/android-pit-scout-2018.iml" />
+      <module fileurl="file://$PROJECT_DIR$/AndroidPitScout.iml" filepath="$PROJECT_DIR$/AndroidPitScout.iml" />
+      <module fileurl="file://C:\Users\jadem\Desktop\AndroidStudioProjects\AndroidPitScout\android-pit-scout-2018.iml" filepath="C:\Users\jadem\Desktop\AndroidStudioProjects\AndroidPitScout\android-pit-scout-2018.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
