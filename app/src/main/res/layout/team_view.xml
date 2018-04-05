@@ -45,5 +45,14 @@
         android:paddingLeft="3dp"
         />
 
+    <Button
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/SendButton"
+        android:layout_below="@+id/SEALsNotesEditText"
+        android:text="SEND"
+        android:padding="10dp"
+        android:onClick="sendNotes"/>
+
 
 </RelativeLayout>

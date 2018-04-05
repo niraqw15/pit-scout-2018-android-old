@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     public static FirebaseDatabase dataBase;
     public static DatabaseReference ref;
     List<DataModel> dataModelsList;
-    /*TeamListAdapter*/BaseAdapter adapter;
+    BaseAdapter adapter;
     private DatabaseReference dataBaseReference;
 
     @Override
