@@ -40,6 +40,8 @@ public class ViewTeam extends AppCompatActivity {
     Context context;
     Button sendNotesButton;
 
+    ColorCycleClass colorCycler;
+
     FirebaseDatabase database;
     DatabaseReference dataBaseReference;
 
@@ -83,6 +85,16 @@ public class ViewTeam extends AppCompatActivity {
                 connectionErrorToast.show();
             }
         });
+
+        colorCycler = new ColorCycleClass(this, teamTextView);
+    }
+
+    public void toggleColorCycle(View view) {
+        if(colorCycler.isRunning()) {
+            colorCycler.stopCycle();
+        } else {
+            colorCycler.startCycle();
+        }
     }
 
     public void sendNotes(View view) {
