@@ -13,6 +13,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -41,6 +42,7 @@ import java.util.Map;
 
 public class TimerActivity extends AppCompatActivity {
 
+    private Context context;
     private boolean isRamp, timerRunning, success;
     private int teamNumber;
     private Button toggleButton;
@@ -50,7 +52,6 @@ public class TimerActivity extends AppCompatActivity {
     private FirebaseDatabase database;
     private DatabaseReference myRef;
     private Map<String, List<TrialData>> trialListMap;
-    private Map<String, Long> trialCountMap;
     private ValueEventListener trialEventListener;
     private long time = 0;
     private BaseAdapter timerAdapter;
@@ -60,6 +61,7 @@ public class TimerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        context = this;
 
         getExtras();
 
@@ -100,10 +102,6 @@ public class TimerActivity extends AppCompatActivity {
         trialListMap.put("Ramp", new ArrayList<TrialData>());
         trialListMap.put("Drive", new ArrayList<TrialData>());
 
-        trialCountMap = new HashMap<>();
-        trialCountMap.put("Ramp", Long.valueOf(0));
-        trialCountMap.put("Drive", Long.valueOf(0));
-
         timerAdapter = new BaseAdapter() {
             @Override
             public int getCount() {
@@ -124,13 +122,13 @@ public class TimerActivity extends AppCompatActivity {
             @Override //Partially modelled after http://stackoverflow.com/questions/35761897/how-do-i-make-a-relative-layout-an-item-of-my-listview-and-detect-gestures-over
             public View getView(int position, View convertView, ViewGroup parent) {
                 LayoutInflater layoutInflater;
-                TimerViewHolder listViewHolder;
+                TimerViewHolder listViewHolder = new TimerViewHolder();
+                String typeString = isRamp ? "Ramp" : "Drive";
 
                 if(convertView == null){
                     layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     convertView = layoutInflater.inflate(R.layout.layout_timer_list_item, parent, false);
 
-                    listViewHolder = new TimerViewHolder();
                     listViewHolder.trialView = (TextView) convertView.findViewById(R.id.trialView);
                     listViewHolder.timeView = (TextView) convertView.findViewById(R.id.timeView);
                     listViewHolder.outcomeView = (TextView) convertView.findViewById(R.id.outcomeView);
@@ -141,9 +139,9 @@ public class TimerActivity extends AppCompatActivity {
 
                 String posString = "" + (position + 1);
                 listViewHolder.trialView.setText(posString);
-                String timeString = trialListMap.get(isRamp ? "Ramp" : "Drive").get(position).getTimeString();
+                String timeString = trialListMap.get(typeString).get(position).getTimeString();
                 listViewHolder.timeView.setText(timeString);
-                String outcomeString = trialListMap.get(isRamp ? "Ramp" : "Drive").get(position).getOutcomeString();
+                String outcomeString = trialListMap.get(typeString).get(position).getOutcomeString();
                 listViewHolder.outcomeView.setText(outcomeString);
 
                 return convertView;
@@ -151,6 +149,34 @@ public class TimerActivity extends AppCompatActivity {
         };
         timerListView = (ListView) findViewById(R.id.timesList);
         timerListView.setAdapter(timerAdapter);
+        timerListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id)
+            {
+                final int trialNum = pos;
+                int displayTrialNum = pos + 1;
+                AlertDialog.Builder builder = new AlertDialog.Builder(context, android.R.style.Theme_Material_Dialog_Alert);
+                builder.setTitle("Delete trial")
+                        .setMessage("Are you sure you want to delete trial #" + displayTrialNum + "?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                String typeString = isRamp ? "Ramp" : "Drive";
+                                Map<String, List> editTrialMap = getEditTrialMap(trialNum);
+                                myRef.child("pit" + typeString + "Time").setValue(editTrialMap.get("Time"));
+                                myRef.child("pit" + typeString + "TimeOutcome").setValue(editTrialMap.get("Outcome"));
+                                myRef.addListenerForSingleValueEvent(trialEventListener); //TODO: Is this needed?
+                                dialog.dismiss();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+            }
+        });
 
         trialEventListener = new ValueEventListener() {
             @Override
@@ -210,13 +236,15 @@ public class TimerActivity extends AppCompatActivity {
                     trialListMap = new HashMap<>();
                     trialListMap.put("Ramp", rampList);
                     trialListMap.put("Drive", driveList);
+                } else {
+                    //Prevents errors from deleting all trial data on Firebase
 
-                    trialCountMap = new HashMap<>();
-                    trialCountMap.put("Ramp", dataSnapshot.child(rTime).getChildrenCount());
-                    trialCountMap.put("Drive", dataSnapshot.child(dTime).getChildrenCount());
-
-                    timerAdapter.notifyDataSetChanged();
+                    trialListMap = new HashMap<>();
+                    trialListMap.put("Ramp", new ArrayList<TrialData>());
+                    trialListMap.put("Drive", new ArrayList<TrialData>());
                 }
+
+                timerAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -275,7 +303,6 @@ public class TimerActivity extends AppCompatActivity {
                         .setPositiveButton("Submit", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
 
-
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -317,8 +344,9 @@ public class TimerActivity extends AppCompatActivity {
                             deciTime = deciTime / 1000; //Stores time in seconds.
 
                             String typeString = isRamp ? "Ramp" : "Drive";
-                            myRef.child("pit" + typeString + "Time").child("" + trialCountMap.get(typeString)).setValue(deciTime);
-                            myRef.child("pit" + typeString + "TimeOutcome").child("" + trialCountMap.get(typeString)).setValue(success);
+                            int trialNum = trialListMap.get(typeString).size();
+                            myRef.child("pit" + typeString + "Time").child("" + trialNum).setValue(deciTime);
+                            myRef.child("pit" + typeString + "TimeOutcome").child("" + trialNum).setValue(success);
 
                             time = 0;
                             timerView.setText("00:00.00");
@@ -415,8 +443,9 @@ public class TimerActivity extends AppCompatActivity {
                             boolean outcome = (distance * ratio) > (10 - length);
 
                             String typeString = isRamp ? "Ramp" : "Drive";
-                            myRef.child("pit" + typeString + "Time").child("" + trialCountMap.get(typeString)).setValue(deciTime);
-                            myRef.child("pit" + typeString + "TimeOutcome").child("" + trialCountMap.get(typeString)).setValue(outcome);
+                            int trialNum = trialListMap.get(typeString).size();
+                            myRef.child("pit" + typeString + "Time").child("" + trialNum).setValue(deciTime);
+                            myRef.child("pit" + typeString + "TimeOutcome").child("" + trialNum).setValue(outcome);
 
                             time = 0;
                             timerView.setText("00:00.00");
@@ -446,6 +475,25 @@ public class TimerActivity extends AppCompatActivity {
         teamNumber = previous.getIntExtra("teamNumber", 0);
     }
 
+    private Map<String, List> getEditTrialMap(int deletePos) {
+        String typeString = isRamp ? "Ramp" : "Drive";
+        List<TrialData> trialList = new ArrayList<>(trialListMap.get(typeString));
+        List<Double> timeList = new ArrayList<>();
+        List<Boolean> outcomeList = new ArrayList<>();
+
+        for(int pos = 0; pos < trialList.size(); pos++) {
+            if(pos != deletePos) {
+                timeList.add(trialList.get(pos).getTime());
+                outcomeList.add(trialList.get(pos).getOutcome());
+            }
+        }
+
+        Map<String, List> editTrialMap = new HashMap<>();
+        editTrialMap.put("Time", timeList);
+        editTrialMap.put("Outcome", outcomeList);
+
+        return editTrialMap;
+    }
 }
 
 //For temporarily holding values of each item.
