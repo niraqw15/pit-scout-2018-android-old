@@ -27,7 +27,7 @@ public class ColorCycleClass {
     public ColorCycleClass(Context context, TextView textView) {
         this.context = context;
         id = textView.getId();
-        wordToSpan = new SpannableString(textView.toString());
+        wordToSpan = new SpannableString(textView.getText());
         initializeRunnable();
         if(id != null) canRun = true;
     }
