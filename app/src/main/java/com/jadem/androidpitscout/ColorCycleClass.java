@@ -1,4 +1,4 @@
-package com.example.sam.blutoothsocketreceiver;
+package com.jadem.androidpitscout;
 
 import android.app.Activity;
 import android.content.Context;
