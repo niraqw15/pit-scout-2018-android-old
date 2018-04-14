@@ -14,6 +14,8 @@ import android.widget.TextView;
  * Created by niraq on 3/11/2018.
  */
 
+//TODO: Make an list of all possible colors on initialization, instead of calculating every time.
+
 public class ColorCycleClass {
 
     private Runnable runnable;
