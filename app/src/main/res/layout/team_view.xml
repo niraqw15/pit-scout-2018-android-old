@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:gravity="center"
-        android:textSize="25dp"
+        android:textSize="25sp"
         android:paddingLeft="3dp"
         />
 
@@ -34,7 +34,7 @@
         android:text="SEALs Notes: climber notes, possible autos, etc."
         android:id="@+id/SEALsNotesTextView"
         android:layout_below="@+id/timer"
-        android:textSize="15dp"
+        android:textSize="15sp"
         android:layout_marginTop="50dp"
         android:paddingLeft="3dp"
         />
