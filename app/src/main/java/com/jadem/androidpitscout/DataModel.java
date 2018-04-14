@@ -7,22 +7,26 @@ package com.jadem.androidpitscout;
 public class DataModel {
 
     private String name;
-    private Integer teamNumber;
+    private Integer number;
 
-    public DataModel(String name, Integer teamNumber) {
+    public DataModel() {
+        //Allows usage as Firebase POJO.
+    }
+
+    public DataModel(String name, Integer number) {
         this.name = name;
-        this.teamNumber = teamNumber;
+        this.number = number;
     }
 
     public String getName() {
         return name;
     }
 
-    public Integer getTeamNumber() {
-        return teamNumber;
+    public Integer getNumber() {
+        return number;
     }
 
     public String getFormattedString() {
-        return teamNumber + " - " + name;
+        return number + " - " + name;
     }
 }

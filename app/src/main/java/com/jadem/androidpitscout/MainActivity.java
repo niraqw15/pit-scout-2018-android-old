@@ -3,7 +3,6 @@ package com.jadem.androidpitscout;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -18,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -51,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
         dataBase = FirebaseDatabase.getInstance();
         dataBaseReference = FirebaseDatabase.getInstance().getReference();
-        ref = dataBase.getReference();
+        ref = dataBase.getReference().child("Teams");
         context = this;
 
         searchBar = (EditText) findViewById(R.id.searchEditText);
@@ -106,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
 
                 DataModel dataModel = dataModelsList.get(pos);
                 String teamName = dataModel.getName();
-                Integer teamNumber = dataModel.getTeamNumber();
+                Integer teamNumber = dataModel.getNumber();
 
                 Intent intent = new Intent(MainActivity.this,ViewTeam.class);
                 intent.putExtra("teamName", teamName);
@@ -123,13 +121,9 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 dataModelsListOriginal = new ArrayList<DataModel>();
 
-                for (int pos = 0; pos < 10000; pos++) {
-                    if (dataSnapshot.child("Teams").hasChild("" + pos)) {
-                        String name = dataSnapshot.child("Teams").child("" + pos).child("name").getValue().toString();
-                        Integer number = Integer.parseInt(dataSnapshot.child("Teams").child("" + pos).child("number").getValue().toString());
-                        DataModel dataModel = new DataModel(name, number);
-                        dataModelsListOriginal.add(dataModel);
-                    }
+                for (DataSnapshot teamSnapshot: dataSnapshot.getChildren()) {
+                    DataModel dataModel = teamSnapshot.getValue(DataModel.class);
+                    dataModelsListOriginal.add(dataModel);
                 }
                 //TODO: Notify adapter (only if there is a new team)
                 dataModelsList = new ArrayList<DataModel>(dataModelsListOriginal);
