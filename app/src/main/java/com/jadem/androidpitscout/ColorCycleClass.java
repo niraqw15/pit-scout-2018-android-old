@@ -27,12 +27,14 @@ public class ColorCycleClass {
     private Context context;
     private Thread thread;
     private List<Integer> colorList;
+    private List<Spannable> spannableList;
 
     public ColorCycleClass(Context context, TextView textView) {
         this.context = context;
         id = textView.getId();
         wordToSpan = new SpannableString(textView.getText());
         colorWheel();
+        setSpannableList(textView.getText().toString());
         initializeRunnable();
         if(id != null) canRun = true;
     }
@@ -52,17 +54,20 @@ public class ColorCycleClass {
     public void setView(TextView textView) {
         id = textView.getId();
         wordToSpan = new SpannableString(textView.toString());
+        setSpannableList(textView.getText().toString());
         if(context != null) canRun = true;
     }
 
     public void setText(String string) {
         wordToSpan = new SpannableString(string);
+        setSpannableList(string);
     }
 
     //TODO: Test if this is necessary (EditText extends TextView).
     public void setView(EditText editText) {
         id = editText.getId();
         wordToSpan = new SpannableString(editText.toString());
+        setSpannableList(editText.getText().toString());
         if(context != null) canRun = true;
     }
 
@@ -83,11 +88,25 @@ public class ColorCycleClass {
         colorList = new ArrayList<Integer>();
 
         //TODO: Should this be 21 or 22?
-        for(int position = 0; position < 21; position++) {
+        for(int position = 0; position < 22; position++) {
             int red = (int) Math.round(Math.sin(freq*position + 0) * 127 + 128);
             int green = (int) Math.round(Math.sin(freq*position + 2) * 127 + 128);
             int blue  = (int) Math.round(Math.sin(freq*position + 4) * 127 + 128);
             colorList.add(Color.argb(255, red, green, blue));
+        }
+    }
+
+    private void setSpannableList(String string) {
+        spannableList = new ArrayList<Spannable>();
+        for(int stringNum = 0; stringNum < 22; stringNum++) {
+            int colorPos = 0;
+            Spannable wordToSpan = new SpannableString(string);
+            for(int charNum = 0; charNum < wordToSpan.length(); charNum++) {
+                wordToSpan.setSpan(new ForegroundColorSpan(colorList.get(colorPos)), charNum, charNum + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                colorPos++;
+                if(colorPos >= 22) colorPos = 0;
+            }
+            spannableList.add(wordToSpan);
         }
     }
 
@@ -100,15 +119,7 @@ public class ColorCycleClass {
                 canRun = false;
                 int pos = 0;
                 while (pos < 22 && !Thread.interrupted() && !stopThread) {
-
-                    int pos2 = pos;
-                    for (int i = 0; i < wordToSpan.length(); i++) {
-                        if(Thread.interrupted() || stopThread) return;
-                        wordToSpan.setSpan(new ForegroundColorSpan(colorList.get(pos2)), i, i + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        if (pos2 >= 21) pos2 = 0;
-                        else pos2++;
-                    }
-
+                    wordToSpan = spannableList.get(pos);
                     pos++;
 
                     try {
