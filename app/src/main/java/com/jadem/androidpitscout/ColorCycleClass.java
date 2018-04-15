@@ -88,7 +88,7 @@ public class ColorCycleClass {
         colorList = new ArrayList<Integer>();
 
         //TODO: Should this be 21 or 22?
-        for(int position = 0; position < 22; position++) {
+        for(int position = 0; position < 21; position++) {
             int red = (int) Math.round(Math.sin(freq*position + 0) * 127 + 128);
             int green = (int) Math.round(Math.sin(freq*position + 2) * 127 + 128);
             int blue  = (int) Math.round(Math.sin(freq*position + 4) * 127 + 128);
@@ -98,13 +98,13 @@ public class ColorCycleClass {
 
     private void setSpannableList(String string) {
         spannableList = new ArrayList<Spannable>();
-        for(int stringNum = 0; stringNum < 22; stringNum++) {
+        for(int stringNum = 0; stringNum < 21; stringNum++) {
             int colorPos = Integer.valueOf(stringNum);
             Spannable wordToSpan = new SpannableString(string);
             for(int charNum = 0; charNum < wordToSpan.length(); charNum++) {
                 wordToSpan.setSpan(new ForegroundColorSpan(colorList.get(colorPos)), charNum, charNum + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 colorPos++;
-                if(colorPos >= 22) colorPos = 0;
+                if(colorPos >= 21) colorPos = 0;
             }
             spannableList.add(wordToSpan);
         }
@@ -118,7 +118,7 @@ public class ColorCycleClass {
             public void run() {
                 canRun = false;
                 int pos = 0;
-                while (pos < 22 && !Thread.interrupted() && !stopThread) {
+                while (pos < 21 && !Thread.interrupted() && !stopThread) {
                     wordToSpan = spannableList.get(pos);
                     pos++;
 
