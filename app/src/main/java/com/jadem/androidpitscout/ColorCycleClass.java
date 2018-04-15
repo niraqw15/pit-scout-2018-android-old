@@ -99,7 +99,7 @@ public class ColorCycleClass {
     private void setSpannableList(String string) {
         spannableList = new ArrayList<Spannable>();
         for(int stringNum = 0; stringNum < 22; stringNum++) {
-            int colorPos = 0;
+            int colorPos = Integer.valueOf(stringNum);
             Spannable wordToSpan = new SpannableString(string);
             for(int charNum = 0; charNum < wordToSpan.length(); charNum++) {
                 wordToSpan.setSpan(new ForegroundColorSpan(colorList.get(colorPos)), charNum, charNum + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
