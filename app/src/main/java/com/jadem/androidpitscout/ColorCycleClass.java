@@ -10,11 +10,12 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by niraq on 3/11/2018.
  */
-
-//TODO: Make an list of all possible colors on initialization, instead of calculating every time.
 
 public class ColorCycleClass {
 
@@ -25,11 +26,13 @@ public class ColorCycleClass {
     private Spannable wordToSpan;
     private Context context;
     private Thread thread;
+    private List<Integer> colorList;
 
     public ColorCycleClass(Context context, TextView textView) {
         this.context = context;
         id = textView.getId();
         wordToSpan = new SpannableString(textView.getText());
+        colorWheel();
         initializeRunnable();
         if(id != null) canRun = true;
     }
@@ -75,12 +78,17 @@ public class ColorCycleClass {
         stopThread = true;
     }
 
-    private int colorWheel(int position) {
+    private void colorWheel() {
         double freq = 0.3;
-        int red = (int) Math.round(Math.sin(freq*position + 0) * 127 + 128);
-        int green = (int) Math.round(Math.sin(freq*position + 2) * 127 + 128);
-        int blue  = (int) Math.round(Math.sin(freq*position + 4) * 127 + 128);
-        return Color.argb(255, red, green, blue);
+        colorList = new ArrayList<Integer>();
+
+        //TODO: Should this be 21 or 22?
+        for(int position = 0; position < 21; position++) {
+            int red = (int) Math.round(Math.sin(freq*position + 0) * 127 + 128);
+            int green = (int) Math.round(Math.sin(freq*position + 2) * 127 + 128);
+            int blue  = (int) Math.round(Math.sin(freq*position + 4) * 127 + 128);
+            colorList.add(Color.argb(255, red, green, blue));
+        }
     }
 
     private void initializeRunnable() {
@@ -96,9 +104,8 @@ public class ColorCycleClass {
                     int pos2 = pos;
                     for (int i = 0; i < wordToSpan.length(); i++) {
                         if(Thread.interrupted() || stopThread) return;
-                        int color = colorWheel(pos2);
-                        wordToSpan.setSpan(new ForegroundColorSpan(color), i, i + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        if (!(pos2 < 21)) pos2 = 0;
+                        wordToSpan.setSpan(new ForegroundColorSpan(colorList.get(pos2)), i, i + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        if (pos2 >= 21) pos2 = 0;
                         else pos2++;
                     }
 
