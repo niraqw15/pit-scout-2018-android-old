@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
     List<DataModel> dataModelsListOriginal;
     List<DataModel> dataModelsList;
     BaseAdapter adapter;
-    private DatabaseReference dataBaseReference;
     EditText searchBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         dataBase = FirebaseDatabase.getInstance();
-        dataBaseReference = FirebaseDatabase.getInstance().getReference();
         ref = dataBase.getReference().child("Teams");
         context = this;
 
